@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fuja das P2 · Mecânica dos Fluidos I</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: faixa azul de abertura com o símbolo da Prisma, depois seções empilhadas numa coluna de ~960px; mapa e tabelas rolam dentro de si no celular. */
+:root{
+  --azul:#0F2347; --laranja:#FF6B3D; --amarelo:#FFC845; --lilas:#C9A7FF;
+  --bg:#F8F6F2; --fg:#0F2347; --muted:#5B6478; --line:#DCD8CF; --card:#FFFFFF; --soft:#EFEBE3;
+  --band:#0F2347; --band-fg:#FFFFFF; --band-muted:#C9CEDA; --faixa-azul:#0F2347;
+  --tag:#EDE3FF; --tag-fg:#3B2A63; --warn-bg:#FFE7DE; --warn-fg:#7A2A12; --ok-bg:#FFF4D6;
+  --h0:#EEF1F6; --h1:#C6D2E6; --h2:#7F97C2; --h3:#0F2347; --h-fg-dark:#FFFFFF;
+  --f-display:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0B1730; --fg:#EEF0F5; --muted:#A3ACBF; --line:#25355A; --card:#12214A; --soft:#172A55;
+  --band:#08122A; --band-fg:#FFFFFF; --band-muted:#A3ACBF; --faixa-azul:#3A5590;
+  --tag:#2E2550; --tag-fg:#E3D5FF; --warn-bg:#3A1E19; --warn-fg:#FFC2AE; --ok-bg:#33290F;
+  --h0:#16264D; --h1:#2B4B86; --h2:#5D86CC; --h3:#B9CCF2; --h-fg-dark:#0B1730; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0B1730; --fg:#EEF0F5; --muted:#A3ACBF; --line:#25355A; --card:#12214A; --soft:#172A55;
+  --band:#08122A; --band-fg:#FFFFFF; --band-muted:#A3ACBF; --faixa-azul:#3A5590;
+  --tag:#2E2550; --tag-fg:#E3D5FF; --warn-bg:#3A1E19; --warn-fg:#FFC2AE; --ok-bg:#33290F;
+  --h0:#16264D; --h1:#2B4B86; --h2:#5D86CC; --h3:#B9CCF2; --h-fg-dark:#0B1730; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
+a{color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.lbl{font-size:.72rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h2{font-size:1.45rem;font-weight:700;letter-spacing:-.01em}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.faixa{display:grid;grid-template-columns:repeat(4,1fr);height:5px}
+.faixa i:nth-child(1){background:var(--faixa-azul)}.faixa i:nth-child(2){background:var(--laranja)}.faixa i:nth-child(3){background:var(--amarelo)}.faixa i:nth-child(4){background:var(--lilas)}
+/* topo */
+.band{background:var(--band);color:var(--band-fg)}
+.band .wrap{padding-block:34px 26px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.band svg{width:64px;height:auto}
+.band .eyebrow{color:var(--amarelo);font-size:.74rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase}
+.band h1{font-size:clamp(1.7rem,4.6vw,2.6rem);font-weight:700;line-height:1.1;margin-top:4px}
+.band .sub{color:var(--band-muted);margin-top:6px}
+.band .sub b{color:var(--band-fg);font-weight:500}
+.docs{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.docs a{font-size:.82rem;text-decoration:none;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 11px;color:var(--band-fg)}
+.docs a:hover,.docs a:focus-visible{background:rgba(255,255,255,.1);outline:none}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+nav.toc .wrap{display:flex;gap:4px 16px;flex-wrap:wrap;padding-block:10px}
+nav.toc a{font-size:.85rem;text-decoration:none;color:var(--muted)}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--fg);text-decoration:underline;text-underline-offset:3px;outline:none}
+section{padding-block:34px;border-bottom:1px solid var(--line)}
+section .head{display:flex;flex-direction:column;gap:4px;margin-bottom:16px}
+section .lead{color:var(--muted);max-width:68ch;margin:0}
+.aviso{background:var(--warn-bg);color:var(--warn-fg);border-left:4px solid var(--laranja);padding:10px 14px;border-radius:2px;font-size:.92rem;margin-top:18px}
+.aviso + .aviso{margin-top:8px}
+/* mapa de calor */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.heat{border-collapse:separate;border-spacing:3px;min-width:560px;width:100%}
+table.heat th{font-size:.78rem;font-weight:500;color:var(--muted);text-align:left;padding:4px 6px;white-space:nowrap}
+table.heat th.col{text-align:center}
+table.heat td.t{font-size:.9rem;padding:4px 8px 4px 0;min-width:180px}
+table.heat td.t small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+table.heat td.c{text-align:center;padding:0}
+.cell{width:100%;min-width:64px;border:0;border-radius:3px;padding:9px 4px;font:500 .85rem var(--f-mono);cursor:pointer;color:var(--fg)}
+.cell[data-n="0"]{background:var(--h0);color:var(--muted);cursor:default}
+.cell[data-n="1"]{background:var(--h1)}
+.cell[data-n="2"]{background:var(--h2);color:#fff}
+.cell[data-n="3"]{background:var(--h3);color:var(--h-fg-dark)}
+.cell:focus-visible{outline:2px solid var(--laranja);outline-offset:1px}
+.cell.sel{box-shadow:0 0 0 2px var(--laranja)}
+.legend{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:18px;height:12px;border-radius:2px;display:inline-block}
+.detail{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:12px 14px;font-size:.92rem}
+.detail ul{margin:6px 0 0;padding-left:18px}
+/* quanto vale */
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(0,220px) 1fr 64px;gap:10px;align-items:center;font-size:.9rem}
+.bar .track{height:14px;background:var(--soft);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;background:var(--laranja)}
+.bar .v{text-align:right;font-family:var(--f-mono);font-size:.85rem}
+@media (max-width:560px){.bar{grid-template-columns:1fr 56px}.bar .track{grid-column:1/-1;order:3}}
+/* padrões */
+table.pad{border-collapse:collapse;width:100%;min-width:640px;font-size:.9rem}
+table.pad th{text-align:left;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line)}
+table.pad td{vertical-align:top;padding:10px;border-bottom:1px solid var(--line)}
+table.pad td:first-child{min-width:170px}
+table.pad td:last-child{min-width:92px}
+.pid{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);display:block}
+.qlink{display:inline-block;white-space:nowrap;font-family:var(--f-mono);font-size:.78rem;margin:0 6px 4px 0;text-decoration:none;border-bottom:1px solid var(--laranja)}
+/* armadilhas */
+.traps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.trap h3{font-size:1rem;font-weight:700;margin-bottom:6px}
+.trap ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:.92rem}
+.trap li span{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);white-space:nowrap}
+/* banco */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.filters label{display:flex;flex-direction:column;gap:3px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+select,button{font:inherit;font-size:.9rem}
+select{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:3px;padding:6px 8px;min-width:120px;max-width:100%}
+.cards{display:grid;gap:12px}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:grid;gap:8px}
+.qtop{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline}
+.qid{font-family:var(--f-mono);font-weight:500;font-size:.92rem}
+.meta{font-size:.8rem;color:var(--muted)}
+.dots{letter-spacing:2px;color:var(--laranja)}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{background:var(--tag);color:var(--tag-fg);font-size:.75rem;border-radius:2px;padding:2px 7px}
+.tag.p{background:transparent;border:1px solid var(--line);color:var(--muted);font-family:var(--f-mono)}
+.links{display:flex;gap:14px;flex-wrap:wrap;font-size:.88rem}
+.links a{font-weight:500;text-decoration:none;border-bottom:2px solid var(--laranja)}
+.links a.r{border-bottom-color:var(--lilas)}
+.empty{color:var(--muted);font-size:.92rem}
+/* simulado */
+.sim{display:grid;gap:14px}
+.simbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:12px 14px}
+.clock{font-family:var(--f-mono);font-size:2rem;font-weight:500;min-width:7ch;font-variant-numeric:tabular-nums}
+.btn{border:1px solid var(--fg);background:transparent;color:var(--fg);border-radius:3px;padding:7px 14px;cursor:pointer}
+.btn.pri{background:var(--laranja);border-color:var(--laranja);color:#0F2347;font-weight:500}
+.btn:focus-visible{outline:2px solid var(--laranja);outline-offset:2px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.dur{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted)}
+.dur select{min-width:auto}
+.blocos{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.blocos .lbl{width:100%}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:.92rem;cursor:pointer}
+.chk input{accent-color:var(--laranja);width:16px;height:16px}
+.simq{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:grid;gap:6px}
+.simq .num{font-weight:700;color:var(--laranja);font-size:1.4rem;line-height:1}
+.key{background:var(--ok-bg);border-radius:3px;padding:10px 12px;font-size:.9rem}
+.key ol{margin:4px 0 0;padding-left:20px}
+.study{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 24px}
+.study div{border-top:1px solid var(--line);padding-top:8px}
+.study b{font-weight:500}
+.study p{margin:2px 0 0;color:var(--muted);font-size:.88rem}
+footer{padding-block:26px 40px;color:var(--muted);font-size:.85rem}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:520px){.band .wrap{grid-template-columns:1fr}.band svg{width:48px}}
+</style>
+
+<style>.volta{background:var(--band);color:var(--band-fg);border-bottom:1px solid rgba(255,255,255,.12)}.volta .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:10px;font-size:.85rem}.volta a{color:var(--band-fg);text-decoration:none;font-weight:500}.volta a:hover,.volta a:focus-visible{text-decoration:underline;text-underline-offset:3px;outline:none}.volta .mono{color:var(--band-muted);letter-spacing:.08em}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="volta"><div class="wrap"><a href="../index.html">← Fuja das P2</a><span class="mono">PME3230</span></div></div>
+<header class="band">
+  <div class="wrap">
+    <svg viewBox="0 0 381 414" role="img" aria-label="Símbolo da chapa Prisma"><polygon points="122,8 12,81 123,148" fill="#FFC845"/><polygon points="132,9 371,156 260,230 132,153" fill="#FF6B3D"/><polygon points="10,88 123,156 123,324 9,404" fill="#3A5590"/><polygon points="132,240 193,200 252,235 132,319" fill="#C9A7FF"/></svg>
+    <div style="min-width:0">
+      <div class="eyebrow">Fuja das P2 · Raio-X da matéria</div>
+      <h1 id="titulo"></h1>
+      <div class="sub" id="sub"></div>
+      <div class="docs" id="docs"></div>
+    </div>
+  </div>
+  <div class="faixa"><i></i><i></i><i></i><i></i></div>
+</header>
+<div class="wrap" style="padding-top:18px"><p class="aviso"><b>2019 · resolução parcial.</b> O enunciado do item 3(d) está coberto por uma dobra do papel no único scan que temos, e o gabarito não traz esse item. As questões 1, 2 e os itens 3(a)–(c) estão resolvidos. Se você tem outra cópia dessa prova, mande para @prisma.poli.</p></div>
+<nav class="toc" aria-label="Seções"><div class="wrap">
+  <a href="#cai">O que cai</a><a href="#vale">Quanto vale</a><a href="#padroes">Padrões</a><a href="#armadilhas">Armadilhas</a><a href="#banco">Banco</a><a href="#simulado">Simulado</a><a href="#estude">Estude aqui</a>
+</div></nav>
+
+<main class="wrap">
+  <div id="avisos"></div>
+
+  <section id="cai">
+    <div class="head"><span class="lbl">O que cai</span><h2>Em quais provas cada assunto apareceu</h2>
+      <p class="lead">Cada célula conta em quantas provas o tópico apareceu. Toque numa célula para ver as questões.</p></div>
+    <div class="scroll"><table class="heat" id="heat"></table></div>
+    <div class="legend" id="legend"></div>
+    <div class="detail" id="heatdetail">Toque numa célula colorida para listar as questões daquele tópico.</div>
+  </section>
+
+  <section id="vale">
+    <div class="head"><span class="lbl">Quanto vale</span><h2>Quanto da nota costuma depender de cada assunto</h2>
+      <p class="lead">Média, por prova, dos pontos das questões que usam o tópico (de 10). Uma questão costuma usar vários tópicos, então a soma passa de 10.</p></div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <section id="padroes">
+    <div class="head"><span class="lbl">Padrões de questão</span><h2>Como reconhecer e como atacar</h2>
+      <p class="lead">Os tipos de questão que se repetem. Os códigos levam à página da resolução.</p></div>
+    <div class="scroll"><table class="pad" id="pad"></table></div>
+  </section>
+
+  <section id="armadilhas">
+    <div class="head"><span class="lbl">Armadilhas que mais derrubam</span><h2>Os erros que custam pontos, por assunto</h2></div>
+    <div class="traps" id="traps"></div>
+  </section>
+
+  <section id="banco">
+    <div class="head"><span class="lbl">Banco de questões</span><h2>Todas as questões, com filtro</h2></div>
+    <div class="filters">
+      <label for="fTop">Tópico<select id="fTop"></select></label>
+      <label for="fPad">Padrão<select id="fPad"></select></label>
+      <label for="fProva">Prova<select id="fProva"></select></label>
+      <label for="fAno">Ano<select id="fAno"></select></label>
+      <label for="fDif">Dificuldade<select id="fDif"></select></label>
+    </div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section id="simulado">
+    <div class="head"><span class="lbl">Simulado</span><h2>Monte uma P2 com questões de anos diferentes</h2>
+      <p class="lead" id="simlead"></p></div>
+    <div class="sim">
+      <div class="simbar">
+        <div class="clock" id="clock" aria-live="off">110:00</div>
+        <button class="btn pri" id="bStart" type="button">Começar</button>
+        <button class="btn" id="bEnd" type="button">Encerrar e ver resolução</button>
+        <button class="btn" id="bNew" type="button">Sortear outra</button>
+        <label class="dur" for="dur">Duração
+          <select id="dur"><option value="90">90 min</option><option value="100">100 min</option><option value="110">110 min</option><option value="120">120 min</option></select></label>
+      </div>
+      <p class="empty" style="margin:0">A duração não consta nas provas analisadas; ajuste ao tempo da sua turma.</p>
+      <div id="simqs" class="cards"></div>
+    </div>
+  </section>
+
+  <section id="estude">
+    <div class="head"><span class="lbl">Estude aqui</span><h2>Onde estudar cada tópico</h2>
+      <p class="lead" id="studylead"></p></div>
+    <div class="study" id="study"></div>
+  </section>
+</main>
+<footer class="wrap" id="rodape"></footer>
+
+<script id="dados" type="application/json">{"taxonomia": {"codigo": "PME3230", "materia": "Mecânica dos Fluidos I", "status": "proposta — aguardando OK do coordenador da matéria", "escopo": "Conteúdo da P2: Bernoulli, leis integrais em volume de controle (massa e energia), perdas de carga e máquinas", "guia_teoria": null, "materiais_base": ["Continuidade e Teorema de Transporte de Reynolds — Teoria (Prof. Marcos Tadeu Pereira, 2026)", "Primeira Lei da Termodinâmica — Teoria (Prof. Marcos Tadeu Pereira, 2026)", "Equação de Bernoulli — Teoria (Prof. Marcos Tadeu Pereira, 2026)", "T3 — Dinâmica da partícula fluida e Bernoulli (D. Lauria, rev. A. L. C. Mariani)", "T5 — Equação da Energia, notas de aula (A. L. C. Mariani, 2024)", "Exercícios selecionados de Bernoulli (aula 25/09/2024)", "Exercícios 5.1, 5.2, 5.4 e 5.5 — Equação da Energia (A. L. C. Mariani)"], "topicos": [{"slug": "bernoulli", "nome": "Equação de Bernoulli", "grupo": "Escoamento ideal", "ref": null, "material": "Equação de Bernoulli — Teoria (Prof. Marcos); T3 (Lauria/Mariani)"}, {"slug": "estagnacao-pitot", "nome": "Pressão de estagnação e tubo de Pitot", "grupo": "Escoamento ideal", "ref": null, "material": "T3 (Lauria/Mariani) — pressões estática, dinâmica e total; tubo de Pitot"}, {"slug": "hidrostatica", "nome": "Hidrostática e manometria", "grupo": "Escoamento ideal", "ref": null, "material": "Revisão de estática dos fluidos (P1)"}, {"slug": "cavitacao", "nome": "Cavitação", "grupo": "Escoamento ideal", "ref": null, "material": "T3 (Lauria/Mariani) — restrições de uso de Bernoulli"}, {"slug": "continuidade", "nome": "Conservação da massa", "grupo": "Leis integrais em VC", "ref": null, "material": "Continuidade e TTR — Teoria (Prof. Marcos)"}, {"slug": "vc-multiplo", "nome": "VC com várias entradas e saídas", "grupo": "Leis integrais em VC", "ref": null, "material": "T5 (Mariani), p. 10; Exercício 5.4 (barco)"}, {"slug": "rho-variavel", "nome": "Massa específica variável", "grupo": "Leis integrais em VC", "ref": null, "material": "Continuidade e TTR — Teoria (Prof. Marcos)"}, {"slug": "eq-energia", "nome": "Equação da energia", "grupo": "Leis integrais em VC", "ref": null, "material": "Primeira Lei da Termodinâmica — Teoria (Prof. Marcos); T5 (Mariani)"}, {"slug": "alfa", "nome": "Coeficiente de energia cinética α", "grupo": "Leis integrais em VC", "ref": null, "material": "T5 (Mariani), p. 8"}, {"slug": "maquinas", "nome": "Máquinas: potência e rendimento", "grupo": "Máquinas", "ref": null, "material": "T5 (Mariani), p. 5–6; Exercícios 5.1, 5.2, 5.5"}, {"slug": "perda-distribuida", "nome": "Perda de carga distribuída", "grupo": "Escoamento em tubos", "ref": null, "material": "Formulário da prova: Darcy-Weisbach"}, {"slug": "perda-componentes", "nome": "Perdas em componentes", "grupo": "Escoamento em tubos", "ref": null, "material": "Formulário da prova: h_s = K_s V²/2g"}, {"slug": "reynolds", "nome": "Número de Reynolds e regime", "grupo": "Escoamento em tubos", "ref": null, "material": "Formulário da prova"}, {"slug": "fator-atrito", "nome": "Fator de atrito (Moody/Colebrook)", "grupo": "Escoamento em tubos", "ref": null, "material": "Formulário da prova: 64/Re, Colebrook, Moody"}, {"slug": "carga-piezometrica", "nome": "Carga piezométrica", "grupo": "Escoamento em tubos", "ref": null, "material": "Equação de Bernoulli — Teoria (Prof. Marcos): linhas de energia e piezométrica"}], "padroes": [{"id": "P-JATO", "nome": "Reservatório pressurizado → jato", "reconhecer": "Tanque com ar pressurizado e/ou colunas de líquido, saída por bocal; pedem velocidade de saída ou altura máxima do jato", "metodo": "Pressão na superfície (ou na interface) pela hidrostática; Bernoulli dali até a saída do bocal (p = 0) e até o ápice do jato (p = 0, V = 0). Fixe o plano de referência antes de tudo."}, {"id": "P-PITOT", "nome": "Pitot com manômetro", "reconhecer": "Tubo de Pitot ou tomada de pressão total ligada a manômetro em U", "metodo": "p_total − p_estática = ρV²/2; Stevin no manômetro. Mesmo fluido sobre o mercúrio nas duas pernas → (γ_Hg − γ_fluido)·H."}, {"id": "P-BALANCO", "nome": "Balanço de massa com várias seções", "reconhecer": "Sala, duto ou equipamento com várias entradas/saídas e massas específicas diferentes", "metodo": "Σṁ que entra = Σṁ que sai (massa, nunca volume). Converta cada vazão com o ρ local; o sinal do ṁ desconhecido dá o sentido."}, {"id": "P-POTENCIA", "nome": "Potência de máquina pela equação da energia", "reconhecer": "Pedem potência de bomba, ventilador ou turbina, no fluido, no eixo ou do motor", "metodo": "H_saída − H_entrada = H_M − Σperdas; Ẇ_fluido = ṁ·g·H_M = γ·Q·H_M; bomba/ventilador: Ẇ_eixo = Ẇ_fluido/η; turbina: Ẇ_eixo = η·Ẇ_fluido."}, {"id": "P-TUBO", "nome": "Tubo com perda distribuída", "reconhecer": "Dados D, L, ε e vazão ou velocidade; pedem Δp, pressão necessária, f ou regime", "metodo": "V = Q/A → Re → f (64/Re se laminar; Moody/Colebrook se turbulento) → h_f = f(L/D)V²/2g → equação da energia entre as seções."}, {"id": "P-GRAFICO", "nome": "Perda lida em gráfico de carga piezométrica", "reconhecer": "Gráfico de carga piezométrica × comprimento de um trecho de tubo", "metodo": "h_f = queda da reta no trecho pedido (confira a unidade do eixo); isole f em Darcy-Weisbach; confirme o regime com Re."}, {"id": "P-RADIAL", "nome": "Escoamento radial entre discos", "reconhecer": "Fluido sai radialmente entre placas paralelas; pedem pressão num raio interno ou cavitação", "metodo": "Área da seção = 2πrh, então V ∝ 1/r; Bernoulli entre o raio e a saída (p = 0); compare p absoluta com a pressão de vapor."}, {"id": "P-CICLO", "nome": "Ciclo bomba–turbina", "reconhecer": "Mesma tubulação operando nos dois sentidos (usina reversível, armazenamento)", "metodo": "Turbina: H_T = Δz − h_f; bomba: H_B = Δz + h_f; η_global = Ẇ_eixo,T / Ẇ_eixo,B = η_T·η_B·(Δz − h_f)/(Δz + h_f)."}]}, "provas": [{"id": "PME3230-2019-P2", "codigo": "PME3230", "materia": "Mecânica dos Fluidos I", "prova": "P2", "professor": null, "duracao_min": null, "status": "rascunho", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "ano": 2019, "data": null, "questoes": [{"n": 1, "id": "PME3230-2019-P2-Q1", "pontos": 3.0, "topicos": ["perda-distribuida", "reynolds", "fator-atrito", "continuidade", "eq-energia", "alfa"], "padrao": "P-TUBO", "padroes_secundarios": [], "dificuldade": 2, "resumo": "Reservatório ligado por tubo de 80 mm e 60 m a um bocal de 35 mm; pede a pressão efetiva no reservatório para o jato sair a 1 m/s.", "armadilhas": ["Usar 1 m/s como velocidade no tubo (é a velocidade na saída do bocal)", "Dar energia cinética ao reservatório (V₁ ≈ 0)", "Usar Moody com Re ≈ 1530: no laminar f = 64/Re"], "pagina_enunciado": 1, "pagina_resolucao": 1, "armadilhas_tag": ["continuidade", "eq-energia", "fator-atrito"], "respostas": ["p_efetiva ≈ 1 072 Pa"]}, {"n": 2, "id": "PME3230-2019-P2-Q2", "pontos": 3.5, "topicos": ["continuidade", "bernoulli", "cavitacao"], "padrao": "P-RADIAL", "padroes_secundarios": [], "dificuldade": 2, "resumo": "Água sai radialmente entre dois discos paralelos (h = 1,5 mm) alimentados por reservatório com 1 m de coluna; pede velocidade de saída, vazão, pressão no raio r_c e se cavita.", "armadilhas": ["Usar a área do disco (πR²) em vez da lateral 2πRh", "Comparar pressão efetiva com pressão de vapor absoluta"], "pagina_enunciado": 1, "pagina_resolucao": 2, "armadilhas_tag": ["continuidade", "cavitacao"], "respostas": ["a  V ≈ 4,43 m/s", "b  ṁ ≈ 12,5 kg/s", "c  p_C ≈ −29,4 kPa (efetiva)", "d  não cavita (7,34 mca > 0,24 mca)"]}, {"n": 3, "id": "PME3230-2019-P2-Q3", "pontos": 3.5, "topicos": ["eq-energia", "maquinas", "continuidade"], "padrao": "P-POTENCIA", "padroes_secundarios": [], "dificuldade": 2, "resumo": "Sistema de ataque a incêndio: bomba recalca de reservatório para tanque pressurizado a 827 kPa que alimenta um jato; pede V₄, vazão, cota z₀ e potência do motor (item d ilegível no scan).", "armadilhas": ["Errar o sinal da carga da bomba na equação da energia", "Usar z₄ ≈ 0 quando o enunciado dá z₄ = 0,914 m", "Multiplicar pelo rendimento em vez de dividir para a potência do motor"], "pagina_enunciado": 2, "pagina_resolucao": 4, "armadilhas_tag": ["eq-energia", "eq-energia", "maquinas"], "respostas": ["a  V₄ ≈ 40,7 m/s; ṁ ≈ 37,8 kg/s", "b  z₀ ≈ 76,1 m acima da bomba", "c  ≈ 4,25 kW no motor", "d  item ilegível no scan"]}]}, {"id": "PME3230-2023-P2", "codigo": "PME3230", "materia": "Mecânica dos Fluidos I", "prova": "P2", "professor": null, "duracao_min": null, "status": "rascunho", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "ano": 2023, "data": "2023-10-25", "questoes": [{"n": 1, "id": "PME3230-2023-P2-Q1", "pontos": 3.0, "topicos": ["bernoulli", "estagnacao-pitot", "hidrostatica"], "padrao": "P-JATO", "padroes_secundarios": ["P-PITOT"], "dificuldade": 2, "resumo": "Reservatório hidropneumático (ar a 2 atm + 20 m de água) alimenta jato vertical; pede altura máxima, velocidade no bocal e leitura H de manômetro de Hg ligado a um Pitot.", "armadilhas": ["Tratar 2 atm como pressão absoluta (é a leitura do manômetro, relativa)", "Medir A_MAX a partir do bocal em vez da base, como na figura", "Usar só ρ_Hg no manômetro quando as duas pernas têm água: o certo é (ρ_Hg − ρ_água)"], "pagina_enunciado": 1, "pagina_resolucao": 1, "armadilhas_tag": ["hidrostatica", "bernoulli", "estagnacao-pitot"], "respostas": ["1.1  A_MAX ≈ 40,7 m acima da base", "1.2  V ≈ 27,9 m/s", "1.3  H ≈ 3,15 m de mercúrio"]}, {"n": 2, "id": "PME3230-2023-P2-Q2", "pontos": 3.5, "topicos": ["continuidade", "vc-multiplo", "rho-variavel", "eq-energia", "maquinas"], "padrao": "P-BALANCO", "padroes_secundarios": ["P-POTENCIA"], "dificuldade": 3, "resumo": "Sala de máquinas com insuflação (90 L/s a 1,2 kg/m³), radiador e exaustão (100 L/s a 0,83 kg/m³); pede vazão e sentido na veneziana, potência do ventilador e nova vazão de exaustão.", "armadilhas": ["Fazer o balanço em volume (90 − 100 L/s) em vez de em massa e errar o sentido na veneziana", "Usar em Δp·Q a vazão do ar já aquecido (130 L/s) em vez da que passa pelo ventilador (90 L/s)", "Multiplicar pelo rendimento em vez de dividir para achar a potência no eixo"], "pagina_enunciado": 2, "pagina_resolucao": 3, "armadilhas_tag": ["rho-variavel", "maquinas", "maquinas"], "respostas": ["2.1  ṁ = 0,025 kg/s", "2.2  da sala para o exterior", "2.3  Q ≈ 30 L/s", "2.4  ≈ 41 W no ar; ≈ 68 W no eixo (o gabarito oficial usa 59 W / 98 W, com a vazão do ar já aquecido)", "2.5  Q_exaustão ≈ 130 L/s"]}, {"n": 3, "id": "PME3230-2023-P2-Q3", "pontos": 3.5, "topicos": ["carga-piezometrica", "perda-distribuida", "reynolds", "fator-atrito", "maquinas"], "padrao": "P-GRAFICO", "padroes_secundarios": ["P-TUBO"], "dificuldade": 2, "resumo": "Perda distribuída lida em gráficos de carga piezométrica em tubo de 25 mm, antes e depois de anos de uso; pede h_f, Δp, f, regime e se uma bomba de 10 W basta para 122 L/min.", "armadilhas": ["Ler a Figura a em metros: ela está em centímetros", "Não conferir o regime: Re = 1918 é laminar e f deve bater com 64/Re", "Concluir sobre a bomba sem calcular a potência dissipada (≈ 5 kW a 122 L/min)"], "pagina_enunciado": 3, "pagina_resolucao": 5, "armadilhas_tag": ["carga-piezometrica", "reynolds", "maquinas"], "respostas": ["3.1  h_f = 4 cm = 0,04 m", "3.2  Δp ≈ 391 Pa", "3.3  f ≈ 0,033", "3.4  laminar (Re ≈ 1 918)", "3.5  f ≈ 0,071", "3.6  turbulento (Re ≈ 20 711)", "3.7  insuficiente: precisa de ≈ 5,0 kW"]}]}, {"id": "PME3230-2024-P2", "codigo": "PME3230", "materia": "Mecânica dos Fluidos I", "prova": "P2", "professor": null, "duracao_min": 120, "status": "rascunho", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "ano": 2024, "data": "2024-10-14", "questoes": [{"n": 1, "pontos": 3.5, "topicos": ["continuidade", "bernoulli"], "padrao": "P-BALANCO", "padroes_secundarios": ["P-JATO"], "dificuldade": 2, "resumo": "Tanque de 75 cm enchido pela diferença de vazão de uma tubulação (2,5 → 1,9 m/s, d = 12 cm); reservatórios A e B em cascata com jatos livres: croqui, hipóteses e altura h_A.", "armadilhas": ["Usar só V₁ (ou só V₂) em vez da diferença V₁ − V₂ para a vazão que entra no tanque", "Igualar as velocidades dos dois tubos em vez das vazões"], "armadilhas_tag": ["continuidade", "continuidade"], "respostas": ["1.1  Δt ≈ 45,6 s", "1.4  h_A ≈ 15,4 m"], "id": "PME3230-2024-P2-Q1", "pagina_enunciado": 1, "pagina_resolucao": 1}, {"n": 2, "pontos": 3.0, "topicos": ["estagnacao-pitot", "hidrostatica", "bernoulli", "continuidade"], "padrao": "P-PITOT", "padroes_secundarios": [], "dificuldade": 3, "resumo": "Redução de 100 para 50 mm com Pitot em 1 e tomada estática em 2 ligados a um manômetro de 80 mm (fluido de 780 kg/m³); pede V₁, vazão mássica e o que mede um Pitot estático.", "armadilhas": ["Aplicar V = √(2Δp/ρ) direto: o manômetro lê a pressão dinâmica em 2, não em 1 (daria 32,2 m/s)"], "armadilhas_tag": ["estagnacao-pitot"], "respostas": ["2.2  V₁ ≈ 8,06 m/s", "2.3  ṁ ≈ 0,076 kg/s", "2.4  B: pressão de estagnação; C: pressão estática; diferença = pressão dinâmica ρV²/2"], "id": "PME3230-2024-P2-Q2", "pagina_enunciado": 2, "pagina_resolucao": 3}, {"n": 3, "pontos": 3.5, "topicos": ["perda-distribuida", "reynolds", "fator-atrito", "maquinas"], "padrao": "P-TUBO", "padroes_secundarios": [], "dificuldade": 2, "resumo": "Óleo em tubo de aço galvanizado (D = 40 mm, L = 50 m, Q = 1,5 L/s): Δp e potência; quantos tubos em paralelo para ficar laminar e a nova Δp e economia de potência.", "armadilhas": ["Usar f = 64/Re com Re = 4775 (o escoamento é turbulento)", "Calcular a potência do conjunto em paralelo com a vazão de um tubo só"], "armadilhas_tag": ["reynolds", "maquinas"], "respostas": ["3.1  Δp ≈ 33,5 kPa; Ẇ ≈ 50 W", "3.2  3 tubos no total", "3.3  Δp ≈ 3,58 kPa; potência ≈ 89% menor (5,4 W)"], "id": "PME3230-2024-P2-Q3", "pagina_enunciado": 3, "pagina_resolucao": 5}]}, {"id": "PME3230-2025-P2", "codigo": "PME3230", "materia": "Mecânica dos Fluidos I", "prova": "P2", "professor": null, "duracao_min": null, "status": "rascunho", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "ano": 2025, "data": "2025-10-23", "questoes": [{"n": 1, "id": "PME3230-2025-P2-Q1", "pontos": 3.0, "topicos": ["hidrostatica", "bernoulli"], "padrao": "P-JATO", "padroes_secundarios": [], "dificuldade": 2, "resumo": "Reservatório fechado com ar (100 kPa), 4 m de óleo e 1 m de água alimenta jato vertical; pede croqui com hipóteses, pressão na interface óleo-água, altura do jato e velocidade no bocal.", "armadilhas": ["Aplicar Bernoulli através do óleo como se fosse água (dá 14,2 m em vez de 13,0 m)", "Esquecer que a saída do bocal está na mesma cota da interface óleo-água"], "pagina_enunciado": 1, "pagina_resolucao": 1, "armadilhas_tag": ["hidrostatica", "bernoulli"], "respostas": ["1.1  croqui com seções 0–5 e três hipóteses", "1.2  p = 127 440 Pa", "1.3  h ≈ 13,0 m acima do bocal; V ≈ 16,0 m/s"]}, {"n": 2, "id": "PME3230-2025-P2-Q2", "pontos": 3.5, "topicos": ["continuidade", "rho-variavel", "perda-componentes", "eq-energia", "maquinas"], "padrao": "P-POTENCIA", "padroes_secundarios": ["P-BALANCO"], "dificuldade": 2, "resumo": "Equipamento de tratamento de ar (filtro, TC−, ventilador, TC+) com ρ variando; pede vazões, velocidades, perdas 0,35V² e potência do ventilador com e sem o resfriamento.", "armadilhas": ["Usar o mesmo ρ em todas as seções ao calcular as velocidades", "Calcular a perda de cada componente com a velocidade de entrada em vez da de saída (critério do professor)", "Na condição B, eliminar a perda do TC− desligado: ela continua e aumenta"], "pagina_enunciado": 1, "pagina_resolucao": 3, "armadilhas_tag": ["rho-variavel", "perda-componentes", "perda-componentes"], "respostas": ["2.1  Q = 1,50 m³/s; ṁ ≈ 1,40 kg/s", "2.2  V₁ ≈ 3,88 m/s; V₂ ≈ 2,58 m/s", "2.3  5,26 m (filtro); 2,34 m (TC−); 8,75 m (TC+)", "2.4  ≈ 890 W no ar; ≈ 2,0 CV no eixo", "2.5  ≈ 931 W no ar", "2.6  aumento de ≈ 4,6%"]}, {"n": 3, "id": "PME3230-2025-P2-Q3", "pontos": 3.5, "topicos": ["perda-distribuida", "reynolds", "fator-atrito", "maquinas", "alfa", "eq-energia"], "padrao": "P-CICLO", "padroes_secundarios": ["P-TUBO"], "dificuldade": 2, "resumo": "Usina hidrelétrica reversível: 500 m de desnível, conduto de 7 km e 914 mm; pede h_f, potência no eixo como turbina e como bomba, pressão antes da máquina e rendimento global do ciclo.", "armadilhas": ["Somar h_f na turbina ou subtrair na bomba (é o contrário)", "Aplicar o rendimento ao contrário: turbina multiplica, bomba divide", "Arredondar V para 3,0 m/s e perder ~2 m de h_f"], "pagina_enunciado": 2, "pagina_resolucao": 5, "armadilhas_tag": ["maquinas", "maquinas", "perda-distribuida"], "respostas": ["3.1  h_f ≈ 42,2 m", "3.2  ≈ 7 611 kW no eixo (turbina)", "3.3  ≈ 12 478 kW no eixo (bomba)", "3.4  p₃ ≈ 4,47 MPa", "3.5  η ≈ 61%"]}]}], "atualizado": "26/10/2026"}</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('dados').textContent);
+const T = D.taxonomia, PROVAS = D.provas;
+const top = Object.fromEntries(T.topicos.map(t=>[t.slug,t]));
+const pad = Object.fromEntries(T.padroes.map(p=>[p.id,p]));
+const Q = [];
+PROVAS.forEach(p=>p.questoes.forEach(q=>Q.push(Object.assign({prova:p.prova, ano:p.ano, pid:p.id, status:p.status}, q))));
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num = (x,d=1) => x.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pdf = (q,v) => `pdf/${q.pid}_${v}.pdf#page=${v==='enunciado'?q.pagina_enunciado:q.pagina_resolucao}`;
+const tipos = ['P1','P2','P3','PSub'];
+const porTipo = t => PROVAS.filter(p=>p.prova===t);
+const anos = PROVAS.map(p=>p.ano).sort();
+
+// topo
+const n = PROVAS.length;
+document.getElementById('titulo').textContent = T.materia;
+document.title = 'Raio-X ' + T.materia;
+document.getElementById('sub').innerHTML = `<b>${esc(T.codigo)}</b> · baseado em <b>${n} provas</b> (P2 de ${anos.join(', ')}) · atualizado em ${esc(D.atualizado)}`;
+document.getElementById('docs').innerHTML = PROVAS.slice().sort((a,b)=>a.ano-b.ano).map(p=>
+  `<a href="pdf/${p.id}_enunciado.pdf" target="_blank" rel="noopener">${p.prova} ${p.ano} · prova</a><a href="pdf/${p.id}_resolucao.pdf" target="_blank" rel="noopener">${p.prova} ${p.ano} · resolução</a>`).join('') + (D.extras||[]).map(x=>`<a href="${esc(x.href)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join('');
+const av = [];
+if (T.nota_organizacao) av.push(`<b>Organizado por conteúdo.</b> ${esc(T.nota_organizacao)}`);
+if (PROVAS.some(p=>p.status!=='revisada')) av.push('<b>Resoluções em revisão.</b> Ainda não foram conferidas por um segundo revisor. Achou algo? Avise em @prisma.poli.');
+if (n < 4) av.push(`<b>Poucas provas, tendência fraca.</b> São só ${n} P2 analisadas; os números abaixo mostram o que já caiu, não o que vai cair.`);
+else av.push(`<b>Lembre:</b> os números abaixo mostram o que caiu nas ${n} P2 analisadas, não o que vai cair.`);
+if (T.status && T.status.startsWith('proposta')) av.push('<b>Taxonomia em proposta.</b> A lista de tópicos e padrões ainda aguarda o OK do coordenador da matéria.');
+document.getElementById('avisos').innerHTML = av.map(a=>`<div class="aviso">${a}</div>`).join('');
+
+// mapa de calor: colunas = tipos de prova que têm dados + uma coluna por prova
+const tiposComDados = tipos.filter(t=>porTipo(t).length);
+const colunas = [];
+tiposComDados.forEach(t=>{ colunas.push({k:t, label: T.organizacao==='conteudo' ? 'Total' : `${t} · total`, provas:porTipo(t)}); porTipo(t).sort((a,b)=>a.ano-b.ano).forEach(p=>colunas.push({k:p.id,label:`${p.prova} ${p.ano}`,provas:[p]})); });
+let html = '<thead><tr><th>Tópico</th>' + colunas.map(c=>`<th class="col">${esc(c.label)}</th>`).join('') + '</tr></thead><tbody>';
+const grupos = [...new Set(T.topicos.map(t=>t.grupo))];
+const contagem = slug => colunas.map(c=>{ const qs=Q.filter(q=>c.provas.some(p=>p.id===q.pid) && q.topicos.includes(slug)); const np=new Set(qs.map(q=>q.pid)).size; return {np, tot:c.provas.length, qs}; });
+const ordem = T.topicos.slice().sort((a,b)=> grupos.indexOf(a.grupo)-grupos.indexOf(b.grupo));
+ordem.forEach(t=>{
+  const cs = contagem(t.slug);
+  html += `<tr><td class="t">${esc(t.nome)}<small>${esc(t.grupo)}</small></td>` + cs.map((c,i)=>{
+    const fr = c.np/c.tot; const lvl = c.np===0?0: (fr<=0.34?1: fr<=0.67?2:3);
+    const txt = colunas[i].provas.length>1 ? `${c.np} de ${c.tot}` : (c.np? '✓' : '–');
+    const aria = `${t.nome}, ${colunas[i].label}: ${c.np} de ${c.tot} provas`;
+    return `<td class="c"><button class="cell" type="button" data-n="${lvl}" data-t="${t.slug}" data-c="${i}" aria-label="${esc(aria)}" ${c.np?'':'tabindex="-1"'}>${txt}</button></td>`; }).join('') + '</tr>';
+});
+html += '</tbody>';
+document.getElementById('heat').innerHTML = html;
+document.getElementById('legend').innerHTML = '<span><i style="background:var(--h0)"></i>não apareceu</span><span><i style="background:var(--h1)"></i>em poucas</span><span><i style="background:var(--h2)"></i>em cerca de metade</span><span><i style="background:var(--h3)"></i>em quase todas</span>' + (T.organizacao!=='conteudo' && tipos.filter(t=>!porTipo(t).length).length?`<span>· ainda sem ${tipos.filter(t=>!porTipo(t).length).join(', ')} no acervo</span>`:'');
+document.getElementById('heat').addEventListener('click', e=>{
+  const b = e.target.closest('.cell'); if(!b || b.dataset.n==='0') return;
+  document.querySelectorAll('.cell.sel').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+  const t = top[b.dataset.t], c = colunas[+b.dataset.c], cs = contagem(t.slug)[+b.dataset.c];
+  document.getElementById('heatdetail').innerHTML = `<b>${esc(t.nome)}</b> · ${esc(c.label)}: apareceu em ${cs.np} de ${cs.tot} ${cs.tot>1?'provas analisadas':'prova'}.<ul>` +
+    cs.qs.map(q=>`<li><a class="qlink" href="${pdf(q,'enunciado')}" target="_blank" rel="noopener">${q.id}</a> ${esc(q.resumo)}</li>`).join('') + '</ul>';
+});
+
+// quanto vale
+const vale = T.topicos.map(t=>{ const tot = PROVAS.reduce((s,p)=>s+p.questoes.filter(q=>q.topicos.includes(t.slug)).reduce((a,q)=>a+q.pontos,0),0); return {t, v: tot/PROVAS.length}; }).sort((a,b)=>b.v-a.v);
+document.getElementById('bars').innerHTML = vale.map(x=>`<div class="bar"><span>${esc(x.t.nome)}</span><div class="track"><div class="fill" style="width:${x.v*10}%"></div></div><span class="v">${num(x.v)}</span></div>`).join('');
+
+// padrões
+const qsDoPadrao = id => Q.filter(q=>q.padrao===id || (q.padroes_secundarios||[]).includes(id));
+document.getElementById('pad').innerHTML = '<thead><tr><th>Padrão</th><th>Como reconhecer</th><th>Como atacar</th><th>Onde caiu</th></tr></thead><tbody>' +
+  T.padroes.map(p=>`<tr><td><b>${esc(p.nome)}</b><span class="pid">${p.id}</span></td><td>${esc(p.reconhecer)}</td><td>${esc(p.metodo)}</td><td>${qsDoPadrao(p.id).map(q=>`<a class="qlink" href="${pdf(q,'resolucao')}" target="_blank" rel="noopener">${q.ano} Q${q.n}</a>`).join('')||'<span class="empty">–</span>'}</td></tr>`).join('') + '</tbody>';
+
+// armadilhas por tópico
+const porTop = {};
+Q.forEach(q=>(q.armadilhas_tag||[]).forEach((slug,i)=>{ (porTop[slug] ||= []).push({txt:q.armadilhas[i], q}); }));
+document.getElementById('traps').innerHTML = Object.entries(porTop).sort((a,b)=>b[1].length-a[1].length).map(([slug,arr])=>
+  `<div class="trap"><h3>${esc(top[slug].nome)} <span class="meta">· ${arr.length}</span></h3><ul>${arr.map(a=>`<li>${esc(a.txt)} <span>${a.q.ano} Q${a.q.n}</span></li>`).join('')}</ul></div>`).join('');
+
+// banco
+const opt = (sel, arr, all) => { sel.innerHTML = `<option value="">${all}</option>` + arr.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join(''); };
+const fTop=document.getElementById('fTop'), fPad=document.getElementById('fPad'), fProva=document.getElementById('fProva'), fAno=document.getElementById('fAno'), fDif=document.getElementById('fDif');
+opt(fTop, T.topicos.map(t=>[t.slug,t.nome]), 'Todos');
+opt(fPad, T.padroes.map(p=>[p.id,p.nome]), 'Todos');
+opt(fProva, [...new Set(PROVAS.map(p=>p.prova))].map(x=>[x,x]), 'Todas');
+opt(fAno, [...new Set(anos)].map(a=>[a,a]), 'Todos');
+opt(fDif, [[1,'1 · aplicação direta'],[2,'2 · montar a estratégia'],[3,'3 · exige uma sacada']], 'Todas');
+const dif = d => '●'.repeat(d)+'○'.repeat(3-d);
+const card = (q, opts={}) => `<article class="qcard">
+  <div class="qtop"><span class="qid">${q.id}</span><span class="meta">${T.organizacao==='conteudo'?'':num(q.pontos)+' pontos · '}<span class="dots" title="dificuldade ${q.dificuldade} de 3">${dif(q.dificuldade)}</span></span></div>
+  <div>${esc(q.resumo)}</div>
+  <div class="tags">${q.topicos.map(s=>`<span class="tag">${esc(top[s].nome)}</span>`).join('')}<span class="tag p">${q.padrao}</span></div>
+  <div class="links"><a href="${pdf(q,'enunciado')}" target="_blank" rel="noopener">Enunciado</a>${opts.semResolucao?'':`<a class="r" href="${pdf(q,'resolucao')}" target="_blank" rel="noopener">Resolução</a>`}</div>
+  ${opts.gabarito?`<div class="key"><span class="lbl">Gabarito rápido</span><ol>${q.respostas.map(r=>`<li>${esc(r)}</li>`).join('')}</ol></div>`:''}
+</article>`;
+function render(){
+  const r = Q.filter(q=>(!fTop.value||q.topicos.includes(fTop.value)) && (!fPad.value||q.padrao===fPad.value||(q.padroes_secundarios||[]).includes(fPad.value)) && (!fProva.value||q.prova===fProva.value) && (!fAno.value||String(q.ano)===fAno.value) && (!fDif.value||String(q.dificuldade)===fDif.value));
+  document.getElementById('cards').innerHTML = r.length ? r.map(q=>card(q)).join('') : '<p class="empty">Nenhuma questão com esses filtros. Tire um dos filtros para ver mais.</p>';
+}
+[fTop,fPad,fProva,fAno,fDif].forEach(s=>s.addEventListener('change',render)); render();
+
+// simulado
+let sim=[], restante=0, timer=null, rodando=false, encerrado=false;
+const clock=document.getElementById('clock'), bStart=document.getElementById('bStart'), bEnd=document.getElementById('bEnd'), dur=document.getElementById('dur');
+const fmt = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+const SIM = D.simulado || {texto:'O sorteio respeita a estrutura das P2 analisadas, uma questão por posição, cada uma de um ano. O gabarito rápido e os links das resoluções só aparecem quando você encerra.', duracao:110, slots:[1,2,3].map(n=>({ids:Q.filter(q=>q.n===n).map(q=>q.id)}))};
+document.getElementById('simlead').textContent = SIM.texto;
+if (SIM.titulo) document.querySelector('#simulado h2').textContent = SIM.titulo;
+dur.value = String(SIM.duracao||110);
+if (SIM.blocos){
+  const bx=document.createElement('div'); bx.className='blocos'; bx.innerHTML = '<span class="lbl">Blocos que caem na sua prova</span>' + SIM.blocos.map((b,i)=>`<label class="chk" for="blk${i}"><input type="checkbox" id="blk${i}" data-i="${i}" checked> ${esc(b.nome)} <span class="meta">(${b.ids.length} questões)</span></label>`).join('');
+  document.querySelector('.sim').insertBefore(bx, document.querySelector('.simbar'));
+  bx.addEventListener('change', ()=>sortear());
+}
+function sortear(){
+  if (SIM.blocos){
+    const sel=[...document.querySelectorAll('.blocos input:checked')].map(i=>SIM.blocos[+i.dataset.i]);
+    const pool=sel.flatMap(b=>b.ids.map(id=>Q.find(q=>q.id===id)));
+    const k=Math.min(SIM.n||10,pool.length); const pick=pool.slice().sort(()=>Math.random()-0.5).slice(0,k);
+    sim=pick.sort((a,b)=>pool.indexOf(a)-pool.indexOf(b));
+    encerrado=false; parar(); restante=+dur.value*60; clock.textContent=fmt(restante); bStart.textContent='Começar'; bStart.disabled=!sim.length; desenhaSim(); return;
+  }
+  const slots=SIM.slots.map(s=>Q.filter(q=>s.ids.includes(q.id)));
+  for(let tent=0;tent<200;tent++){
+    const pick=slots.map(s=>s[Math.floor(Math.random()*s.length)]);
+    if(new Set(pick.map(q=>q.pid)).size===pick.length){ sim=pick; break; }
+  }
+  encerrado=false; parar(); restante=+dur.value*60; clock.textContent=fmt(restante); bStart.textContent='Começar'; bStart.disabled=false; desenhaSim();
+}
+function desenhaSim(){
+  document.getElementById('simqs').innerHTML = `<p class="empty" style="margin:0">${sim.length} questões${SIM.blocos?'':' · '+num(sim.reduce((a,q)=>a+q.pontos,0))+' pontos'}</p>` + sim.map((q,i)=>`<div class="simq"><div class="num">${i+1}</div>${card(q,{semResolucao:!encerrado, gabarito:encerrado})}</div>`).join('');
+}
+function parar(){ clearInterval(timer); timer=null; rodando=false; }
+bStart.addEventListener('click',()=>{
+  if(encerrado) return;
+  if(rodando){ parar(); bStart.textContent='Continuar'; return; }
+  rodando=true; bStart.textContent='Pausar';
+  timer=setInterval(()=>{ restante=Math.max(0,restante-1); clock.textContent=fmt(restante); if(!restante){ encerrar(); } },1000);
+});
+function encerrar(){ parar(); encerrado=true; bStart.disabled=true; bStart.textContent='Encerrado'; desenhaSim(); }
+bEnd.addEventListener('click',encerrar);
+document.getElementById('bNew').addEventListener('click',sortear);
+dur.addEventListener('change',()=>{ if(!rodando && !encerrado){ restante=+dur.value*60; clock.textContent=fmt(restante);} });
+sortear();
+
+// estude aqui
+const mats = {}; T.topicos.forEach(t=>{ (mats[t.grupo] ||= []).push(t); });
+const comMat = T.topicos.filter(t=>t.material||t.ref);
+document.getElementById('studylead').textContent = comMat.length ? 'Materiais da disciplina que cobrem cada tópico. Os links diretos entram quando o guia de teoria da Prisma estiver no ar.' : 'Ainda não há material de teoria vinculado a esta matéria. Enquanto isso, cada tópico abaixo leva às questões em que ele caiu.';
+document.getElementById('study').innerHTML = T.topicos.map(t=>{
+  const qs = Q.filter(q=>q.topicos.includes(t.slug));
+  const extra = (t.material||t.ref) ? `<p>${esc(t.material||'')}</p>` : `<p>${qs.map(q=>`<a class="qlink" href="${pdf(q,'resolucao')}" target="_blank" rel="noopener">${q.ano} Q${q.n}</a>`).join('')||'Ainda não caiu nas provas analisadas.'}</p>`;
+  return `<div><b>${esc(t.nome)}</b>${t.ref?` · <a href="${esc(t.ref)}" target="_blank" rel="noopener">abrir</a>`:''}${extra}</div>`; }).join('');
+
+document.getElementById('rodape').innerHTML = `<b>Fuja das P2</b> · uma iniciativa da chapa <b>Prisma</b> · Grêmio Politécnico · @prisma.poli<br>Transcrição e resolução: ${esc([...new Set(PROVAS.flatMap(p=>p.transcricao.concat(p.resolucao)))].join(', '))}. Revisão: ${PROVAS.some(p=>p.revisao.length)?esc([...new Set(PROVAS.flatMap(p=>p.revisao))].join(', ')):'pendente'}.`;
+
+// abre a seção pedida no link (#cai, #banco…)
+if(location.hash){ const el=document.getElementById(location.hash.slice(1)); if(el) el.scrollIntoView(); }
+})();
+</script>
+
+</body>
+</html>
