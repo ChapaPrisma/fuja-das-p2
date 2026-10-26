@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fuja das P2 · Física II</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: faixa azul de abertura com o símbolo da Prisma, depois seções empilhadas numa coluna de ~960px; mapa e tabelas rolam dentro de si no celular. */
+:root{
+  --azul:#0F2347; --laranja:#FF6B3D; --amarelo:#FFC845; --lilas:#C9A7FF;
+  --bg:#F8F6F2; --fg:#0F2347; --muted:#5B6478; --line:#DCD8CF; --card:#FFFFFF; --soft:#EFEBE3;
+  --band:#0F2347; --band-fg:#FFFFFF; --band-muted:#C9CEDA; --faixa-azul:#0F2347;
+  --tag:#EDE3FF; --tag-fg:#3B2A63; --warn-bg:#FFE7DE; --warn-fg:#7A2A12; --ok-bg:#FFF4D6;
+  --h0:#EEF1F6; --h1:#C6D2E6; --h2:#7F97C2; --h3:#0F2347; --h-fg-dark:#FFFFFF;
+  --f-display:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0B1730; --fg:#EEF0F5; --muted:#A3ACBF; --line:#25355A; --card:#12214A; --soft:#172A55;
+  --band:#08122A; --band-fg:#FFFFFF; --band-muted:#A3ACBF; --faixa-azul:#3A5590;
+  --tag:#2E2550; --tag-fg:#E3D5FF; --warn-bg:#3A1E19; --warn-fg:#FFC2AE; --ok-bg:#33290F;
+  --h0:#16264D; --h1:#2B4B86; --h2:#5D86CC; --h3:#B9CCF2; --h-fg-dark:#0B1730; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0B1730; --fg:#EEF0F5; --muted:#A3ACBF; --line:#25355A; --card:#12214A; --soft:#172A55;
+  --band:#08122A; --band-fg:#FFFFFF; --band-muted:#A3ACBF; --faixa-azul:#3A5590;
+  --tag:#2E2550; --tag-fg:#E3D5FF; --warn-bg:#3A1E19; --warn-fg:#FFC2AE; --ok-bg:#33290F;
+  --h0:#16264D; --h1:#2B4B86; --h2:#5D86CC; --h3:#B9CCF2; --h-fg-dark:#0B1730; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
+a{color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.lbl{font-size:.72rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h2{font-size:1.45rem;font-weight:700;letter-spacing:-.01em}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.faixa{display:grid;grid-template-columns:repeat(4,1fr);height:5px}
+.faixa i:nth-child(1){background:var(--faixa-azul)}.faixa i:nth-child(2){background:var(--laranja)}.faixa i:nth-child(3){background:var(--amarelo)}.faixa i:nth-child(4){background:var(--lilas)}
+/* topo */
+.band{background:var(--band);color:var(--band-fg)}
+.band .wrap{padding-block:34px 26px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.band svg{width:64px;height:auto}
+.band .eyebrow{color:var(--amarelo);font-size:.74rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase}
+.band h1{font-size:clamp(1.7rem,4.6vw,2.6rem);font-weight:700;line-height:1.1;margin-top:4px}
+.band .sub{color:var(--band-muted);margin-top:6px}
+.band .sub b{color:var(--band-fg);font-weight:500}
+.docs{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.docs a{font-size:.82rem;text-decoration:none;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 11px;color:var(--band-fg)}
+.docs a:hover,.docs a:focus-visible{background:rgba(255,255,255,.1);outline:none}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+nav.toc .wrap{display:flex;gap:4px 16px;flex-wrap:wrap;padding-block:10px}
+nav.toc a{font-size:.85rem;text-decoration:none;color:var(--muted)}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--fg);text-decoration:underline;text-underline-offset:3px;outline:none}
+section{padding-block:34px;border-bottom:1px solid var(--line)}
+section .head{display:flex;flex-direction:column;gap:4px;margin-bottom:16px}
+section .lead{color:var(--muted);max-width:68ch;margin:0}
+.aviso{background:var(--warn-bg);color:var(--warn-fg);border-left:4px solid var(--laranja);padding:10px 14px;border-radius:2px;font-size:.92rem;margin-top:18px}
+.aviso + .aviso{margin-top:8px}
+/* mapa de calor */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.heat{border-collapse:separate;border-spacing:3px;min-width:560px;width:100%}
+table.heat th{font-size:.78rem;font-weight:500;color:var(--muted);text-align:left;padding:4px 6px;white-space:nowrap}
+table.heat th.col{text-align:center}
+table.heat td.t{font-size:.9rem;padding:4px 8px 4px 0;min-width:180px}
+table.heat td.t small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+table.heat td.c{text-align:center;padding:0}
+.cell{width:100%;min-width:64px;border:0;border-radius:3px;padding:9px 4px;font:500 .85rem var(--f-mono);cursor:pointer;color:var(--fg)}
+.cell[data-n="0"]{background:var(--h0);color:var(--muted);cursor:default}
+.cell[data-n="1"]{background:var(--h1)}
+.cell[data-n="2"]{background:var(--h2);color:#fff}
+.cell[data-n="3"]{background:var(--h3);color:var(--h-fg-dark)}
+.cell:focus-visible{outline:2px solid var(--laranja);outline-offset:1px}
+.cell.sel{box-shadow:0 0 0 2px var(--laranja)}
+.legend{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:18px;height:12px;border-radius:2px;display:inline-block}
+.detail{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:12px 14px;font-size:.92rem}
+.detail ul{margin:6px 0 0;padding-left:18px}
+/* quanto vale */
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(0,220px) 1fr 64px;gap:10px;align-items:center;font-size:.9rem}
+.bar .track{height:14px;background:var(--soft);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;background:var(--laranja)}
+.bar .v{text-align:right;font-family:var(--f-mono);font-size:.85rem}
+@media (max-width:560px){.bar{grid-template-columns:1fr 56px}.bar .track{grid-column:1/-1;order:3}}
+/* padrões */
+table.pad{border-collapse:collapse;width:100%;min-width:640px;font-size:.9rem}
+table.pad th{text-align:left;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line)}
+table.pad td{vertical-align:top;padding:10px;border-bottom:1px solid var(--line)}
+table.pad td:first-child{min-width:170px}
+table.pad td:last-child{min-width:92px}
+.pid{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);display:block}
+.qlink{display:inline-block;white-space:nowrap;font-family:var(--f-mono);font-size:.78rem;margin:0 6px 4px 0;text-decoration:none;border-bottom:1px solid var(--laranja)}
+/* armadilhas */
+.traps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.trap h3{font-size:1rem;font-weight:700;margin-bottom:6px}
+.trap ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:.92rem}
+.trap li span{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);white-space:nowrap}
+/* banco */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.filters label{display:flex;flex-direction:column;gap:3px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+select,button{font:inherit;font-size:.9rem}
+select{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:3px;padding:6px 8px;min-width:120px;max-width:100%}
+.cards{display:grid;gap:12px}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:grid;gap:8px}
+.qtop{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline}
+.qid{font-family:var(--f-mono);font-weight:500;font-size:.92rem}
+.meta{font-size:.8rem;color:var(--muted)}
+.dots{letter-spacing:2px;color:var(--laranja)}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{background:var(--tag);color:var(--tag-fg);font-size:.75rem;border-radius:2px;padding:2px 7px}
+.tag.p{background:transparent;border:1px solid var(--line);color:var(--muted);font-family:var(--f-mono)}
+.links{display:flex;gap:14px;flex-wrap:wrap;font-size:.88rem}
+.links a{font-weight:500;text-decoration:none;border-bottom:2px solid var(--laranja)}
+.links a.r{border-bottom-color:var(--lilas)}
+.empty{color:var(--muted);font-size:.92rem}
+/* simulado */
+.sim{display:grid;gap:14px}
+.simbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:12px 14px}
+.clock{font-family:var(--f-mono);font-size:2rem;font-weight:500;min-width:7ch;font-variant-numeric:tabular-nums}
+.btn{border:1px solid var(--fg);background:transparent;color:var(--fg);border-radius:3px;padding:7px 14px;cursor:pointer}
+.btn.pri{background:var(--laranja);border-color:var(--laranja);color:#0F2347;font-weight:500}
+.btn:focus-visible{outline:2px solid var(--laranja);outline-offset:2px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.dur{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted)}
+.dur select{min-width:auto}
+.blocos{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.blocos .lbl{width:100%}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:.92rem;cursor:pointer}
+.chk input{accent-color:var(--laranja);width:16px;height:16px}
+.simq{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:grid;gap:6px}
+.simq .num{font-weight:700;color:var(--laranja);font-size:1.4rem;line-height:1}
+.key{background:var(--ok-bg);border-radius:3px;padding:10px 12px;font-size:.9rem}
+.key ol{margin:4px 0 0;padding-left:20px}
+.study{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 24px}
+.study div{border-top:1px solid var(--line);padding-top:8px}
+.study b{font-weight:500}
+.study p{margin:2px 0 0;color:var(--muted);font-size:.88rem}
+footer{padding-block:26px 40px;color:var(--muted);font-size:.85rem}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:520px){.band .wrap{grid-template-columns:1fr}.band svg{width:48px}}
+</style>
+
+<style>.volta{background:var(--band);color:var(--band-fg);border-bottom:1px solid rgba(255,255,255,.12)}.volta .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:10px;font-size:.85rem}.volta a{color:var(--band-fg);text-decoration:none;font-weight:500}.volta a:hover,.volta a:focus-visible{text-decoration:underline;text-underline-offset:3px;outline:none}.volta .mono{color:var(--band-muted);letter-spacing:.08em}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="volta"><div class="wrap"><a href="../index.html">← Fuja das P2</a><span class="mono">4323102</span></div></div>
+<header class="band">
+  <div class="wrap">
+    <svg viewBox="0 0 381 414" role="img" aria-label="Símbolo da chapa Prisma"><polygon points="122,8 12,81 123,148" fill="#FFC845"/><polygon points="132,9 371,156 260,230 132,153" fill="#FF6B3D"/><polygon points="10,88 123,156 123,324 9,404" fill="#3A5590"/><polygon points="132,240 193,200 252,235 132,319" fill="#C9A7FF"/></svg>
+    <div style="min-width:0">
+      <div class="eyebrow">Fuja das P2 · Raio-X da matéria</div>
+      <h1 id="titulo"></h1>
+      <div class="sub" id="sub"></div>
+      <div class="docs" id="docs"></div>
+    </div>
+  </div>
+  <div class="faixa"><i></i><i></i><i></i><i></i></div>
+</header>
+<nav class="toc" aria-label="Seções"><div class="wrap">
+  <a href="#cai">O que cai</a><a href="#vale">Quanto vale</a><a href="#padroes">Padrões</a><a href="#armadilhas">Armadilhas</a><a href="#banco">Banco</a><a href="#simulado">Simulado</a><a href="#estude">Estude aqui</a>
+</div></nav>
+
+<main class="wrap">
+  <div id="avisos"></div>
+
+  <section id="cai">
+    <div class="head"><span class="lbl">O que cai</span><h2>Em quais provas cada assunto apareceu</h2>
+      <p class="lead">Cada célula conta em quantas provas o tópico apareceu. Toque numa célula para ver as questões.</p></div>
+    <div class="scroll"><table class="heat" id="heat"></table></div>
+    <div class="legend" id="legend"></div>
+    <div class="detail" id="heatdetail">Toque numa célula colorida para listar as questões daquele tópico.</div>
+  </section>
+
+  <section id="vale">
+    <div class="head"><span class="lbl">Quanto vale</span><h2>Quanto da nota costuma depender de cada assunto</h2>
+      <p class="lead">Média, por prova, dos pontos das questões que usam o tópico (de 10). Uma questão costuma usar vários tópicos, então a soma passa de 10.</p></div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <section id="padroes">
+    <div class="head"><span class="lbl">Padrões de questão</span><h2>Como reconhecer e como atacar</h2>
+      <p class="lead">Os tipos de questão que se repetem. Os códigos levam à página da resolução.</p></div>
+    <div class="scroll"><table class="pad" id="pad"></table></div>
+  </section>
+
+  <section id="armadilhas">
+    <div class="head"><span class="lbl">Armadilhas que mais derrubam</span><h2>Os erros que custam pontos, por assunto</h2></div>
+    <div class="traps" id="traps"></div>
+  </section>
+
+  <section id="banco">
+    <div class="head"><span class="lbl">Banco de questões</span><h2>Todas as questões, com filtro</h2></div>
+    <div class="filters">
+      <label for="fTop">Tópico<select id="fTop"></select></label>
+      <label for="fPad">Padrão<select id="fPad"></select></label>
+      <label for="fProva">Prova<select id="fProva"></select></label>
+      <label for="fAno">Ano<select id="fAno"></select></label>
+      <label for="fDif">Dificuldade<select id="fDif"></select></label>
+    </div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section id="simulado">
+    <div class="head"><span class="lbl">Simulado</span><h2>Monte uma P2 com questões de anos diferentes</h2>
+      <p class="lead" id="simlead"></p></div>
+    <div class="sim">
+      <div class="simbar">
+        <div class="clock" id="clock" aria-live="off">110:00</div>
+        <button class="btn pri" id="bStart" type="button">Começar</button>
+        <button class="btn" id="bEnd" type="button">Encerrar e ver resolução</button>
+        <button class="btn" id="bNew" type="button">Sortear outra</button>
+        <label class="dur" for="dur">Duração
+          <select id="dur"><option value="90">90 min</option><option value="100">100 min</option><option value="110">110 min</option><option value="120">120 min</option></select></label>
+      </div>
+      <p class="empty" style="margin:0">A duração não consta nas provas analisadas; ajuste ao tempo da sua turma.</p>
+      <div id="simqs" class="cards"></div>
+    </div>
+  </section>
+
+  <section id="estude">
+    <div class="head"><span class="lbl">Estude aqui</span><h2>Onde estudar cada tópico</h2>
+      <p class="lead" id="studylead"></p></div>
+    <div class="study" id="study"></div>
+  </section>
+</main>
+<footer class="wrap" id="rodape"></footer>
+
+<script id="dados" type="application/json">{"taxonomia": {"codigo": "4323102", "materia": "Física II", "status": "proposta — aguardando OK do coordenador da matéria", "organizacao": "conteudo", "nota_organizacao": "Em Física II, o que cai na P2 muda de turma para turma (cada engenharia tem um ritmo): nas provas que temos, 2023 e 2025 foram só de oscilações, 2024 só de ondas, e 2021 e 2022 misturaram as duas coisas. Por isso a matéria está organizada por blocos de conteúdo: confira no programa da sua turma quais blocos caem na sua prova.", "guia_teoria": null, "topicos": [{"slug": "mhs-molas", "nome": "MHS, molas e pêndulo", "grupo": "Oscilações", "ref": null, "material": null}, {"slug": "amortecimento", "nome": "Oscilador amortecido: regimes e decaimento", "grupo": "Oscilações", "ref": null, "material": null}, {"slug": "condicoes-iniciais", "nome": "Condições iniciais e constantes da solução", "grupo": "Oscilações", "ref": null, "material": null}, {"slug": "forcado-amplitude", "nome": "Oscilador forçado: amplitude e fase", "grupo": "Oscilações", "ref": null, "material": null}, {"slug": "ressonancia-potencia", "nome": "Ressonância: potência, largura e fator Q", "grupo": "Oscilações", "ref": null, "material": null}, {"slug": "ondas-progressivas", "nome": "Ondas progressivas: v, λ, T e gráficos", "grupo": "Ondas", "ref": null, "material": null}, {"slug": "energia-onda", "nome": "Energia e potência de ondas", "grupo": "Ondas", "ref": null, "material": null}, {"slug": "pulsos-reflexao", "nome": "Pulsos e reflexão", "grupo": "Ondas", "ref": null, "material": null}, {"slug": "ondas-estacionarias", "nome": "Ondas estacionárias e modos normais", "grupo": "Ondas", "ref": null, "material": null}, {"slug": "batimentos", "nome": "Batimentos e velocidade de grupo", "grupo": "Ondas", "ref": null, "material": null}, {"slug": "tubos-sonoros", "nome": "Som e tubos sonoros", "grupo": "Ondas", "ref": null, "material": null}], "padroes": [{"id": "P-COEF", "nome": "Identificar γ, ω₀ e F₀/m", "reconhecer": "Equação ẍ + Bẋ + Cx = … dada, ou m, k e b no enunciado", "metodo": "Compare termo a termo com ẍ + γẋ + ω₀²x = (F₀/m) cos Ωt: γ = b/m, ω₀² = k/m. Com duas molas no mesmo bloco, some as constantes."}, {"id": "P-REGIME", "nome": "Qual é o regime?", "reconhecer": "Pedem o regime do movimento ou a forma da solução/velocidade", "metodo": "Compare γ/2 com ω₀: menor → subcrítico (oscila com ω = √(ω₀² − γ²/4)); igual → crítico, e^(−γt/2)(A₀ + B₀t); maior → supercrítico, duas exponenciais com β = √(γ²/4 − ω₀²). Oscilando exatamente em ω₀ e sem perda: MHS."}, {"id": "P-DECAIMENTO", "nome": "Decaimento da amplitude", "reconhecer": "A amplitude cai para uma fração conhecida depois de N oscilações", "metodo": "A(t) = A₀ e^(−γt/2): o expoente é γt/2, não γt. Depois, ω₀² = ω² + γ²/4 com ω = 2π/T."}, {"id": "P-CI", "nome": "Condições iniciais", "reconhecer": "Pedem as constantes (A₀, B₀, A, φ) da solução", "metodo": "Escreva x(t) completo (transiente + estacionário, se houver força), derive e imponha x(0) e ẋ(0). Cuide do sinal da velocidade inicial."}, {"id": "P-AMP", "nome": "Amplitude e fase estacionárias", "reconhecer": "Força F₀ cos Ωt e pedem A(Ω), φ(Ω) ou x(t) no regime estacionário", "metodo": "A = (F₀/m)/√((ω₀² − Ω²)² + γ²Ω²), tan φ = −γΩ/(ω₀² − Ω²). O bloco oscila com a frequência Ω da força, não com ω₀."}, {"id": "P-AMP-MAX", "nome": "Amplitude na ressonância", "reconhecer": "Pedem a maior amplitude possível, ou a amplitude em Ω = ω₀", "metodo": "Em Ω = ω₀: A = F₀/(mγω₀) = F₀/(bω₀). Máximo exato (sem amortecimento fraco): Ω² = ω₀² − γ²/2 e A_max = (F₀/m)/(γ√(ω₀² − γ²/4))."}, {"id": "P-FASE", "nome": "Fase perto da ressonância", "reconhecer": "Frequência da força ajustada logo abaixo ou acima de ω₀", "metodo": "φ = −arctan(γΩ/(ω₀² − Ω²)): Ω → ω₀ dá φ → −π/2 (o movimento atrasa um quarto de ciclo). Valores exatos: calcule tan φ e escolha o quadrante pelo sinal de ω₀² − Ω²."}, {"id": "P-LARGURA", "nome": "Ler a curva de ressonância", "reconhecer": "Gráfico de P̄(Ω) ou de A²(Ω) com pico", "metodo": "Pico em ω₀; largura total à meia altura = γ; Q = ω₀/γ; P̄_max = F₀²/(2mγ). Mesma largura ⇒ mesmo γ."}, {"id": "P-ONDA-GRAF", "nome": "Ler a onda no gráfico", "reconhecer": "Gráficos u × t, u × x ou instantâneos em tempos diferentes", "metodo": "u × t dá T e A; u × x dá λ; o deslocamento entre instantâneos dá v e o sentido. Monte y = A cos(kx ∓ ωt + φ) e fixe φ por um ponto conhecido."}, {"id": "P-RELACOES", "nome": "Relações básicas da onda", "reconhecer": "Tensão, densidade, tempos ou distâncias dados; pedem v, λ ou T", "metodo": "v = λ/T = ω/k = √(F/µ). Do vale à crista passa meio período. Velocidade máxima de um ponto da corda é Aω (não é v)."}, {"id": "P-POT-ONDA", "nome": "Potência transportada", "reconhecer": "Pedem a potência média de uma onda numa corda, ou como ela muda", "metodo": "P = ½µω²A²v. Com F e µ fixos, v não muda: mudar λ obriga ω a mudar na proporção inversa."}, {"id": "P-PULSO", "nome": "Pulso e reflexão", "reconhecer": "Pulso f(αx ± βt) dado; pedem posição do pico ou o pulso refletido", "metodo": "Mesmo sinal entre x e t ⇒ vai para −x; v = β/α; pico onde o argumento zera. Extremidade fixa inverte o pulso, solta não inverte; o refletido troca o sinal de t."}, {"id": "P-MODOS", "nome": "Modos normais da corda", "reconhecer": "Corda com extremidades fixas, harmônicos ou frequências consecutivas", "metodo": "λₙ = 2L/n, fₙ = n·v/(2L); fₙ₊₁ − fₙ = f₁; f ∝ √F. Conte os ventres para achar n."}, {"id": "P-ESTAC", "nome": "Anatomia da onda estacionária", "reconhecer": "Duas ondas iguais em sentidos opostos, ou ponto num ventre", "metodo": "Nós a cada λ/2; o ventre oscila com amplitude 2A e velocidade máxima 2Aω; o período é o das ondas que se somam."}, {"id": "P-BATIMENTO", "nome": "Batimentos", "reconhecer": "Padrão de batimento no gráfico, ou dois sons/tubos de frequências próximas", "metodo": "f_b = |f₁ − f₂| (máximos de intensidade por segundo). Envoltória com Δk/2 e Δω/2; v_g = Δω/Δk, v_f = ω̄/k̄. Tubo aberto nas duas pontas: f = n·v/(2L)."}], "blocos": [{"id": "b1", "nome": "Oscilações amortecidas e forçadas", "slug": "oscilacoes", "grupo": "Oscilações"}, {"id": "b2", "nome": "Ondas", "slug": "ondas", "grupo": "Ondas"}]}, "provas": [{"id": "4323101-2021-P2", "codigo": "4323101", "materia": "Física II", "prova": "P2", "ano": 2021, "data": "2021-12-10", "professor": null, "duracao_min": null, "status": "rascunho", "formato": "resposta numérica (prova online)", "alternativas": "não se aplica", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "questoes": [{"n": 1, "id": "4323101-2021-P2-Q1", "pontos": 2.0, "topicos": ["forcado-amplitude"], "padrao": "P-AMP-MAX", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 1, "pagina_resolucao": 1, "resumo": "Oscilador forçado com γ grande: amplitude máxima exata (sem aproximação de amortecimento fraco).", "armadilhas": ["Usar a aproximação de amortecimento fraco F₀/(mγω₀)"], "armadilhas_tag": ["forcado-amplitude"], "gabarito": null, "respostas": ["A_max ≈ 0,833 m"]}, {"n": 2, "id": "4323101-2021-P2-Q2", "pontos": 2.0, "topicos": ["ondas-progressivas"], "padrao": "P-ONDA-GRAF", "padroes_secundarios": [], "dificuldade": 3, "pagina_enunciado": 2, "pagina_resolucao": 2, "resumo": "Três instantâneos de uma onda: tirar λ, T e fase e calcular y(x, t).", "armadilhas": ["Esquecer a fase ou o sentido de propagação"], "armadilhas_tag": ["ondas-progressivas"], "gabarito": null, "respostas": ["y ≈ −1,94 m"]}, {"n": 3, "id": "4323101-2021-P2-Q3", "pontos": 2.0, "topicos": ["ondas-estacionarias"], "padrao": "P-MODOS", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 3, "resumo": "Onda estacionária no 3º harmônico: tensão a partir de k, ω e da massa da corda.", "armadilhas": ["Usar L = λ em vez de L = nλ/2"], "armadilhas_tag": ["ondas-estacionarias"], "gabarito": null, "respostas": ["T = 1,6 N"]}, {"n": 4, "id": "4323101-2021-P2-Q4", "pontos": 2.0, "topicos": ["ondas-estacionarias"], "padrao": "P-ESTAC", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "Ventre do modo fundamental passando pelo equilíbrio: amplitude a partir da velocidade.", "armadilhas": ["Usar f no lugar de ω = 2πf"], "armadilhas_tag": ["ondas-estacionarias"], "gabarito": null, "respostas": ["y_m ≈ 0,159 m"]}, {"n": 5, "id": "4323101-2021-P2-Q5", "pontos": 2.0, "topicos": ["batimentos", "tubos-sonoros"], "padrao": "P-BATIMENTO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 5, "resumo": "Batimento entre dois tubos abertos: comprimento do segundo instrumento.", "armadilhas": ["Errar o sinal de f₂ = f₁ ± f_b"], "armadilhas_tag": ["batimentos"], "gabarito": null, "respostas": ["L₂ ≈ 40,6 cm"]}]}, {"id": "4323102-2022-P2", "codigo": "4323102", "materia": "Física II", "prova": "P2", "ano": 2022, "data": "2022-12-08", "professor": null, "duracao_min": null, "status": "rascunho", "formato": "múltipla escolha", "alternativas": "reordenadas pela Prisma (no original o gabarito era sempre (a))", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "questoes": [{"n": 1, "id": "4323102-2022-P2-Q1", "pontos": 0.5, "topicos": ["mhs-molas"], "padrao": "P-COEF", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 1, "pagina_resolucao": 1, "resumo": "Bloco entre duas molas: força elástica resultante.", "armadilhas": ["Contar só uma mola ou achar que as forças se cancelam"], "armadilhas_tag": ["mhs-molas"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 2, "id": "4323102-2022-P2-Q2", "pontos": 0.5, "topicos": ["mhs-molas"], "padrao": "P-COEF", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 1, "pagina_resolucao": 2, "resumo": "Duas molas no mesmo bloco: frequência natural.", "armadilhas": ["Usar k em vez de 2k"], "armadilhas_tag": ["mhs-molas"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 3, "id": "4323102-2022-P2-Q3", "pontos": 1.5, "topicos": ["forcado-amplitude"], "padrao": "P-AMP", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 2, "resumo": "Oscilador forçado e amortecido: x(t) no regime estacionário.", "armadilhas": ["Usar ω₀ no lugar da frequência da força"], "armadilhas_tag": ["forcado-amplitude"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 4, "id": "4323102-2022-P2-Q4", "pontos": 0.5, "topicos": ["ressonancia-potencia"], "padrao": "P-LARGURA", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 3, "resumo": "Curva de ressonância A²(ω): coeficiente de viscosidade pela largura.", "armadilhas": ["Tomar a semilargura como γ"], "armadilhas_tag": ["ressonancia-potencia"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 5, "id": "4323102-2022-P2-Q5", "pontos": 1.0, "topicos": ["ressonancia-potencia"], "padrao": "P-LARGURA", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "Mesma curva: fator de qualidade.", "armadilhas": ["Dividir pela semilargura"], "armadilhas_tag": ["ressonancia-potencia"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 6, "id": "4323102-2022-P2-Q6", "pontos": 1.0, "topicos": ["ressonancia-potencia", "forcado-amplitude"], "padrao": "P-AMP-MAX", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 5, "resumo": "Mesma curva: amplitude da força a partir de A_máx.", "armadilhas": ["Errar γ e levar o erro adiante"], "armadilhas_tag": ["ressonancia-potencia"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 7, "id": "4323102-2022-P2-Q7", "pontos": 1.0, "topicos": ["ondas-estacionarias"], "padrao": "P-MODOS", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 3, "pagina_resolucao": 5, "resumo": "Onda estacionária no 4º harmônico: comprimento da corda.", "armadilhas": ["Confundir L com λ"], "armadilhas_tag": ["ondas-estacionarias"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 8, "id": "4323102-2022-P2-Q8", "pontos": 1.0, "topicos": ["ondas-estacionarias"], "padrao": "P-MODOS", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 6, "resumo": "Mesma corda: tensão para o 2º harmônico com a mesma frequência.", "armadilhas": ["Manter o k do harmônico antigo"], "armadilhas_tag": ["ondas-estacionarias"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 9, "id": "4323102-2022-P2-Q9", "pontos": 1.0, "topicos": ["batimentos"], "padrao": "P-BATIMENTO", "padroes_secundarios": [], "dificuldade": 3, "pagina_enunciado": 4, "pagina_resolucao": 7, "resumo": "Padrão de batimento no espaço: números de onda das duas ondas.", "armadilhas": ["Ler a envoltória com metade do comprimento de onda"], "armadilhas_tag": ["batimentos"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 10, "id": "4323102-2022-P2-Q10", "pontos": 1.0, "topicos": ["batimentos"], "padrao": "P-BATIMENTO", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 4, "pagina_resolucao": 8, "resumo": "Mesmo batimento: velocidade de grupo.", "armadilhas": ["Trocar velocidade de grupo por velocidade de fase"], "armadilhas_tag": ["batimentos"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 11, "id": "4323102-2022-P2-Q11", "pontos": 1.0, "topicos": ["batimentos"], "padrao": "P-BATIMENTO", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 4, "pagina_resolucao": 8, "resumo": "Mesmo batimento: velocidade de fase.", "armadilhas": ["Usar a velocidade de uma só das ondas"], "armadilhas_tag": ["batimentos"], "gabarito": "a", "respostas": ["(a)"]}]}, {"id": "4323102-2023-P2", "codigo": "4323102", "materia": "Física II", "prova": "P2", "ano": 2023, "data": "2023-10-10", "professor": null, "duracao_min": null, "status": "rascunho", "formato": "múltipla escolha", "alternativas": "reordenadas pela Prisma (no original o gabarito era sempre (a))", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "questoes": [{"n": 1, "id": "4323102-2023-P2-Q1", "pontos": 0.5, "topicos": ["mhs-molas", "amortecimento"], "padrao": "P-REGIME", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 1, "pagina_resolucao": 1, "resumo": "Pêndulo oscilando na frequência natural: identificar o regime.", "armadilhas": ["Confundir 'oscila' com 'subamortecido'"], "armadilhas_tag": ["amortecimento"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 2, "id": "4323102-2023-P2-Q2", "pontos": 1.0, "topicos": ["amortecimento"], "padrao": "P-DECAIMENTO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 1, "pagina_resolucao": 2, "resumo": "Amplitude cai a e^(−1/2) em 10 oscilações: obter γ = b/M.", "armadilhas": ["Esquecer o 1/2 em e^(−γt/2)"], "armadilhas_tag": ["amortecimento"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 3, "id": "4323102-2023-P2-Q3", "pontos": 1.5, "topicos": ["amortecimento"], "padrao": "P-DECAIMENTO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 3, "resumo": "Mesmo carro: constante elástica efetiva a partir de ω e γ.", "armadilhas": ["Errar o sinal em ω₀² = ω² + γ²/4"], "armadilhas_tag": ["amortecimento"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 4, "id": "4323102-2023-P2-Q4", "pontos": 0.5, "topicos": ["amortecimento"], "padrao": "P-COEF", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "Placa com mola e amortecedor: ω₀ e γ.", "armadilhas": ["Esquecer de dividir pela massa"], "armadilhas_tag": ["amortecimento"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 5, "id": "4323102-2023-P2-Q5", "pontos": 0.5, "topicos": ["amortecimento"], "padrao": "P-REGIME", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 5, "resumo": "Placa supercrítica: expressão da velocidade.", "armadilhas": ["Usar a solução subcrítica sem checar o regime"], "armadilhas_tag": ["amortecimento"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 6, "id": "4323102-2023-P2-Q6", "pontos": 1.5, "topicos": ["condicoes-iniciais"], "padrao": "P-CI", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 5, "resumo": "Placa supercrítica: constantes A₀ e B₀ pelas condições iniciais.", "armadilhas": ["Errar o sinal da velocidade inicial"], "armadilhas_tag": ["condicoes-iniciais"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 7, "id": "4323102-2023-P2-Q7", "pontos": 0.5, "topicos": ["forcado-amplitude"], "padrao": "P-FASE", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 3, "pagina_resolucao": 6, "resumo": "Força com frequência logo abaixo de ω₀: fase do movimento.", "armadilhas": ["Perder o sinal negativo da fase"], "armadilhas_tag": ["forcado-amplitude"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 8, "id": "4323102-2023-P2-Q8", "pontos": 1.0, "topicos": ["forcado-amplitude"], "padrao": "P-AMP-MAX", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 3, "pagina_resolucao": 7, "resumo": "Mesma situação: amplitude na ressonância.", "armadilhas": ["Usar γ = b/(2m)"], "armadilhas_tag": ["forcado-amplitude"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 9, "id": "4323102-2023-P2-Q9", "pontos": 0.5, "topicos": ["forcado-amplitude"], "padrao": "P-AMP", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 4, "pagina_resolucao": 8, "resumo": "Oscilador crítico forçado: amplitude estacionária.", "armadilhas": ["Errar a condição de amortecimento crítico"], "armadilhas_tag": ["forcado-amplitude"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 10, "id": "4323102-2023-P2-Q10", "pontos": 0.5, "topicos": ["forcado-amplitude"], "padrao": "P-FASE", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 4, "pagina_resolucao": 9, "resumo": "Mesmo oscilador: fase do regime estacionário.", "armadilhas": ["Perder o sinal da fase"], "armadilhas_tag": ["forcado-amplitude"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 11, "id": "4323102-2023-P2-Q11", "pontos": 1.0, "topicos": ["condicoes-iniciais"], "padrao": "P-CI", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 4, "pagina_resolucao": 9, "resumo": "Mesmo oscilador: constante A₀ pela posição inicial.", "armadilhas": ["Impor a condição só na solução homogênea"], "armadilhas_tag": ["condicoes-iniciais"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 12, "id": "4323102-2023-P2-Q12", "pontos": 1.0, "topicos": ["condicoes-iniciais"], "padrao": "P-CI", "padroes_secundarios": [], "dificuldade": 3, "pagina_enunciado": 4, "pagina_resolucao": 10, "resumo": "Mesmo oscilador: constante B₀ pela velocidade inicial.", "armadilhas": ["Esquecer a derivada da exponencial"], "armadilhas_tag": ["condicoes-iniciais"], "gabarito": "b", "respostas": ["(b)"]}]}, {"id": "4323102-2024-P2", "codigo": "4323102", "materia": "Física II", "prova": "P2", "ano": 2024, "data": "2024-10-18", "professor": null, "duracao_min": null, "status": "rascunho", "formato": "discursiva (resposta numérica)", "alternativas": "só a questão 5 tem alternativas (reordenadas pela Prisma)", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "questoes": [{"n": 1, "id": "4323102-2024-P2-Q1", "pontos": 0.5, "topicos": ["ondas-progressivas"], "padrao": "P-ONDA-GRAF", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 1, "pagina_resolucao": 1, "resumo": "Gráficos u × t e u × x: velocidade de propagação.", "armadilhas": ["Ler meio comprimento de onda como λ"], "armadilhas_tag": ["ondas-progressivas"], "gabarito": null, "respostas": ["v = 3 m/s"]}, {"n": 2, "id": "4323102-2024-P2-Q2", "pontos": 0.5, "topicos": ["ondas-progressivas"], "padrao": "P-RELACOES", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 1, "pagina_resolucao": 2, "resumo": "Mesma onda: velocidade transversal máxima de um ponto.", "armadilhas": ["Confundir velocidade do ponto com velocidade da onda"], "armadilhas_tag": ["ondas-progressivas"], "gabarito": null, "respostas": ["u̇_max = 5π cm/s"]}, {"n": 3, "id": "4323102-2024-P2-Q3", "pontos": 1.0, "topicos": ["ondas-progressivas"], "padrao": "P-RELACOES", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 1, "pagina_resolucao": 2, "resumo": "Cabo submarino: comprimento de onda a partir de tensão, densidade e tempo vale-crista.", "armadilhas": ["Tomar meio período como período"], "armadilhas_tag": ["ondas-progressivas"], "gabarito": null, "respostas": ["λ = 6 m"]}, {"n": 4, "id": "4323102-2024-P2-Q4", "pontos": 1.0, "topicos": ["energia-onda"], "padrao": "P-POT-ONDA", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 3, "resumo": "Fio de aço: potência média transportada.", "armadilhas": ["Esquecer de converter mm para m"], "armadilhas_tag": ["energia-onda"], "gabarito": null, "respostas": ["P = 56 W"]}, {"n": 5, "id": "4323102-2024-P2-Q5", "pontos": 1.0, "topicos": ["energia-onda"], "padrao": "P-POT-ONDA", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "Mesmo fio: efeito de dobrar λ na potência.", "armadilhas": ["Esquecer que mudar λ muda ω"], "armadilhas_tag": ["energia-onda"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 6, "id": "4323102-2024-P2-Q6", "pontos": 1.0, "topicos": ["pulsos-reflexao"], "padrao": "P-PULSO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "Pulso gaussiano: sentido, velocidade e posição do pico.", "armadilhas": ["Errar o sentido de propagação pelo sinal"], "armadilhas_tag": ["pulsos-reflexao"], "gabarito": null, "respostas": ["x_p = −6 m"]}, {"n": 7, "id": "4323102-2024-P2-Q7", "pontos": 1.0, "topicos": ["pulsos-reflexao"], "padrao": "P-PULSO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 5, "resumo": "Mesmo pulso: reflexão em extremidade solta.", "armadilhas": ["Inverter o pulso numa extremidade solta"], "armadilhas_tag": ["pulsos-reflexao"], "gabarito": null, "respostas": ["u_ref = 0,005 e^(−(5x−15t)²)"]}, {"n": 8, "id": "4323102-2024-P2-Q8", "pontos": 0.5, "topicos": ["ondas-estacionarias"], "padrao": "P-ESTAC", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 2, "pagina_resolucao": 5, "resumo": "Onda estacionária: distância entre nós.", "armadilhas": ["Confundir λ com λ/2"], "armadilhas_tag": ["ondas-estacionarias"], "gabarito": null, "respostas": ["D = 2 m"]}, {"n": 9, "id": "4323102-2024-P2-Q9", "pontos": 0.5, "topicos": ["ondas-estacionarias"], "padrao": "P-ESTAC", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 3, "pagina_resolucao": 6, "resumo": "Mesma onda: período de um ponto do ventre.", "armadilhas": ["Usar D no lugar de λ"], "armadilhas_tag": ["ondas-estacionarias"], "gabarito": null, "respostas": ["T = 2/3 s"]}, {"n": 10, "id": "4323102-2024-P2-Q10", "pontos": 0.5, "topicos": ["ondas-estacionarias"], "padrao": "P-ESTAC", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 6, "resumo": "Mesma onda: velocidade máxima de um ponto do ventre.", "armadilhas": ["Esquecer que a amplitude do ventre é 2A"], "armadilhas_tag": ["ondas-estacionarias"], "gabarito": null, "respostas": ["u̇_max = 3π/25 m/s"]}, {"n": 11, "id": "4323102-2024-P2-Q11", "pontos": 1.0, "topicos": ["ondas-estacionarias"], "padrao": "P-MODOS", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 3, "pagina_resolucao": 7, "resumo": "Dois modos consecutivos: frequência do quarto modo.", "armadilhas": ["Tomar um dos modos dados como o fundamental"], "armadilhas_tag": ["ondas-estacionarias"], "gabarito": null, "respostas": ["f₄ = 40 Hz"]}, {"n": 12, "id": "4323102-2024-P2-Q12", "pontos": 1.5, "topicos": ["ondas-estacionarias"], "padrao": "P-MODOS", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 7, "resumo": "Mesma corda: efeito de mudar a tensão no 4º modo.", "armadilhas": ["Achar que f é proporcional a F (é a raiz)"], "armadilhas_tag": ["ondas-estacionarias"], "gabarito": null, "respostas": ["f₄ cai por √2 (≈ 28,3 Hz)"]}]}, {"id": "4323102-2025-P2", "codigo": "4323102", "materia": "Física II", "prova": "P2", "ano": 2025, "data": "2025-10-24", "professor": null, "duracao_min": null, "status": "rascunho", "formato": "múltipla escolha", "alternativas": "ordem original (o gabarito já era variado)", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "questoes": [{"n": 1, "id": "4323102-2025-P2-Q1", "pontos": 0.5, "topicos": ["amortecimento"], "padrao": "P-DECAIMENTO", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 1, "pagina_resolucao": 1, "resumo": "Amplitude cai a 1/e² em duas oscilações: coeficiente B = γ.", "armadilhas": ["Esquecer o 1/2 em e^(−γt/2)"], "armadilhas_tag": ["amortecimento"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 2, "id": "4323102-2025-P2-Q2", "pontos": 1.0, "topicos": ["amortecimento"], "padrao": "P-DECAIMENTO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 1, "pagina_resolucao": 2, "resumo": "Mesmo oscilador: coeficiente C = ω₀².", "armadilhas": ["Somar ou subtrair γ²/4 errado"], "armadilhas_tag": ["amortecimento"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 3, "id": "4323102-2025-P2-Q3", "pontos": 1.5, "topicos": ["condicoes-iniciais"], "padrao": "P-CI", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 2, "resumo": "Mesmo oscilador: amplitude pelas condições iniciais.", "armadilhas": ["Usar f em vez de ω"], "armadilhas_tag": ["condicoes-iniciais"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 4, "id": "4323102-2025-P2-Q4", "pontos": 2.0, "topicos": ["forcado-amplitude"], "padrao": "P-AMP-MAX", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 3, "resumo": "Mesmo oscilador, agora forçado: amplitude máxima estacionária.", "armadilhas": ["Usar a aproximação de amortecimento fraco sem checar"], "armadilhas_tag": ["forcado-amplitude"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 5, "id": "4323102-2025-P2-Q5", "pontos": 1.0, "topicos": ["ressonancia-potencia"], "padrao": "P-LARGURA", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 4, "resumo": "Duas curvas de potência: razão entre as massas.", "armadilhas": ["Inverter a razão P₁/P₂"], "armadilhas_tag": ["ressonancia-potencia"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 6, "id": "4323102-2025-P2-Q6", "pontos": 1.5, "topicos": ["ressonancia-potencia", "forcado-amplitude"], "padrao": "P-LARGURA", "padroes_secundarios": [], "dificuldade": 3, "pagina_enunciado": 3, "pagina_resolucao": 5, "resumo": "Mesmo gráfico: amplitude do oscilador 2 na ressonância.", "armadilhas": ["Tomar a semilargura como γ"], "armadilhas_tag": ["ressonancia-potencia"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 7, "id": "4323102-2025-P2-Q7", "pontos": 1.0, "topicos": ["forcado-amplitude"], "padrao": "P-FASE", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 4, "pagina_resolucao": 6, "resumo": "Força logo abaixo de ω₀: fase do movimento (repetida de 2023).", "armadilhas": ["Perder o sinal negativo da fase"], "armadilhas_tag": ["forcado-amplitude"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 8, "id": "4323102-2025-P2-Q8", "pontos": 1.5, "topicos": ["forcado-amplitude"], "padrao": "P-AMP-MAX", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 4, "pagina_resolucao": 6, "resumo": "Mesma situação: amplitude na ressonância (repetida de 2023).", "armadilhas": ["Usar γ = b/(2m)"], "armadilhas_tag": ["forcado-amplitude"], "gabarito": "b", "respostas": ["(b)"]}]}], "atualizado": "22/10/2026", "simulado": {"titulo": "Monte uma prova com os blocos da sua turma", "duracao": 120, "n": 10, "texto": "Escolha os blocos de conteúdo que caem na sua prova (isso varia entre engenharias). O sorteio pega 10 questões desses blocos, de anos diferentes, na ordem dos assuntos. O gabarito e os links das resoluções só aparecem quando você encerra.", "blocos": [{"nome": "Oscilações amortecidas e forçadas", "ids": ["4323101-2021-P2-Q1", "4323102-2022-P2-Q1", "4323102-2022-P2-Q2", "4323102-2022-P2-Q3", "4323102-2022-P2-Q4", "4323102-2022-P2-Q5", "4323102-2022-P2-Q6", "4323102-2023-P2-Q1", "4323102-2023-P2-Q2", "4323102-2023-P2-Q3", "4323102-2023-P2-Q4", "4323102-2023-P2-Q5", "4323102-2023-P2-Q6", "4323102-2023-P2-Q7", "4323102-2023-P2-Q8", "4323102-2023-P2-Q9", "4323102-2023-P2-Q10", "4323102-2023-P2-Q11", "4323102-2023-P2-Q12", "4323102-2025-P2-Q1", "4323102-2025-P2-Q2", "4323102-2025-P2-Q3", "4323102-2025-P2-Q4", "4323102-2025-P2-Q5", "4323102-2025-P2-Q6", "4323102-2025-P2-Q7", "4323102-2025-P2-Q8"]}, {"nome": "Ondas", "ids": ["4323101-2021-P2-Q2", "4323101-2021-P2-Q3", "4323101-2021-P2-Q4", "4323101-2021-P2-Q5", "4323102-2022-P2-Q7", "4323102-2022-P2-Q8", "4323102-2022-P2-Q9", "4323102-2022-P2-Q10", "4323102-2022-P2-Q11", "4323102-2024-P2-Q1", "4323102-2024-P2-Q2", "4323102-2024-P2-Q3", "4323102-2024-P2-Q4", "4323102-2024-P2-Q5", "4323102-2024-P2-Q6", "4323102-2024-P2-Q7", "4323102-2024-P2-Q8", "4323102-2024-P2-Q9", "4323102-2024-P2-Q10", "4323102-2024-P2-Q11", "4323102-2024-P2-Q12"]}]}, "extras": [{"label": "Bloco · Oscilações amortecidas e forçadas · prova", "href": "pdf/4323102-bloco-oscilacoes_enunciado.pdf"}, {"label": "Bloco · Oscilações amortecidas e forçadas · resolução", "href": "pdf/4323102-bloco-oscilacoes_resolucao.pdf"}, {"label": "Bloco · Ondas · prova", "href": "pdf/4323102-bloco-ondas_enunciado.pdf"}, {"label": "Bloco · Ondas · resolução", "href": "pdf/4323102-bloco-ondas_resolucao.pdf"}]}</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('dados').textContent);
+const T = D.taxonomia, PROVAS = D.provas;
+const top = Object.fromEntries(T.topicos.map(t=>[t.slug,t]));
+const pad = Object.fromEntries(T.padroes.map(p=>[p.id,p]));
+const Q = [];
+PROVAS.forEach(p=>p.questoes.forEach(q=>Q.push(Object.assign({prova:p.prova, ano:p.ano, pid:p.id, status:p.status}, q))));
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num = (x,d=1) => x.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pdf = (q,v) => `pdf/${q.pid}_${v}.pdf#page=${v==='enunciado'?q.pagina_enunciado:q.pagina_resolucao}`;
+const tipos = ['P1','P2','P3','PSub'];
+const porTipo = t => PROVAS.filter(p=>p.prova===t);
+const anos = PROVAS.map(p=>p.ano).sort();
+
+// topo
+const n = PROVAS.length;
+document.getElementById('titulo').textContent = T.materia;
+document.title = 'Raio-X ' + T.materia;
+document.getElementById('sub').innerHTML = `<b>${esc(T.codigo)}</b> · baseado em <b>${n} provas</b> (P2 de ${anos.join(', ')}) · atualizado em ${esc(D.atualizado)}`;
+document.getElementById('docs').innerHTML = PROVAS.slice().sort((a,b)=>a.ano-b.ano).map(p=>
+  `<a href="pdf/${p.id}_enunciado.pdf" target="_blank" rel="noopener">${p.prova} ${p.ano} · prova</a><a href="pdf/${p.id}_resolucao.pdf" target="_blank" rel="noopener">${p.prova} ${p.ano} · resolução</a>`).join('') + (D.extras||[]).map(x=>`<a href="${esc(x.href)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join('');
+const av = [];
+if (T.nota_organizacao) av.push(`<b>Organizado por conteúdo.</b> ${esc(T.nota_organizacao)}`);
+if (PROVAS.some(p=>p.status!=='revisada')) av.push('<b>Achou um erro?</b> Avise em @prisma.poli.');
+if (n < 4) av.push(`<b>Poucas provas, tendência fraca.</b> São só ${n} P2 analisadas; os números abaixo mostram o que já caiu, não o que vai cair.`);
+else av.push(`<b>Lembre:</b> os números abaixo mostram o que caiu nas ${n} P2 analisadas, não o que vai cair.`);
+if (T.status && T.status.startsWith('proposta')) av.push('<b>Taxonomia em proposta.</b> A lista de tópicos e padrões ainda aguarda o OK do coordenador da matéria.');
+document.getElementById('avisos').innerHTML = av.map(a=>`<div class="aviso">${a}</div>`).join('');
+
+// mapa de calor: colunas = tipos de prova que têm dados + uma coluna por prova
+const tiposComDados = tipos.filter(t=>porTipo(t).length);
+const colunas = [];
+tiposComDados.forEach(t=>{ colunas.push({k:t, label: T.organizacao==='conteudo' ? 'Total' : `${t} · total`, provas:porTipo(t)}); porTipo(t).sort((a,b)=>a.ano-b.ano).forEach(p=>colunas.push({k:p.id,label:`${p.prova} ${p.ano}`,provas:[p]})); });
+let html = '<thead><tr><th>Tópico</th>' + colunas.map(c=>`<th class="col">${esc(c.label)}</th>`).join('') + '</tr></thead><tbody>';
+const grupos = [...new Set(T.topicos.map(t=>t.grupo))];
+const contagem = slug => colunas.map(c=>{ const qs=Q.filter(q=>c.provas.some(p=>p.id===q.pid) && q.topicos.includes(slug)); const np=new Set(qs.map(q=>q.pid)).size; return {np, tot:c.provas.length, qs}; });
+const ordem = T.topicos.slice().sort((a,b)=> grupos.indexOf(a.grupo)-grupos.indexOf(b.grupo));
+ordem.forEach(t=>{
+  const cs = contagem(t.slug);
+  html += `<tr><td class="t">${esc(t.nome)}<small>${esc(t.grupo)}</small></td>` + cs.map((c,i)=>{
+    const fr = c.np/c.tot; const lvl = c.np===0?0: (fr<=0.34?1: fr<=0.67?2:3);
+    const txt = colunas[i].provas.length>1 ? `${c.np} de ${c.tot}` : (c.np? '✓' : '–');
+    const aria = `${t.nome}, ${colunas[i].label}: ${c.np} de ${c.tot} provas`;
+    return `<td class="c"><button class="cell" type="button" data-n="${lvl}" data-t="${t.slug}" data-c="${i}" aria-label="${esc(aria)}" ${c.np?'':'tabindex="-1"'}>${txt}</button></td>`; }).join('') + '</tr>';
+});
+html += '</tbody>';
+document.getElementById('heat').innerHTML = html;
+document.getElementById('legend').innerHTML = '<span><i style="background:var(--h0)"></i>não apareceu</span><span><i style="background:var(--h1)"></i>em poucas</span><span><i style="background:var(--h2)"></i>em cerca de metade</span><span><i style="background:var(--h3)"></i>em quase todas</span>' + (T.organizacao!=='conteudo' && tipos.filter(t=>!porTipo(t).length).length?`<span>· ainda sem ${tipos.filter(t=>!porTipo(t).length).join(', ')} no acervo</span>`:'');
+document.getElementById('heat').addEventListener('click', e=>{
+  const b = e.target.closest('.cell'); if(!b || b.dataset.n==='0') return;
+  document.querySelectorAll('.cell.sel').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+  const t = top[b.dataset.t], c = colunas[+b.dataset.c], cs = contagem(t.slug)[+b.dataset.c];
+  document.getElementById('heatdetail').innerHTML = `<b>${esc(t.nome)}</b> · ${esc(c.label)}: apareceu em ${cs.np} de ${cs.tot} ${cs.tot>1?'provas analisadas':'prova'}.<ul>` +
+    cs.qs.map(q=>`<li><a class="qlink" href="${pdf(q,'enunciado')}" target="_blank" rel="noopener">${q.id}</a> ${esc(q.resumo)}</li>`).join('') + '</ul>';
+});
+
+// quanto vale
+const vale = T.topicos.map(t=>{ const tot = PROVAS.reduce((s,p)=>s+p.questoes.filter(q=>q.topicos.includes(t.slug)).reduce((a,q)=>a+q.pontos,0),0); return {t, v: tot/PROVAS.length}; }).sort((a,b)=>b.v-a.v);
+document.getElementById('bars').innerHTML = vale.map(x=>`<div class="bar"><span>${esc(x.t.nome)}</span><div class="track"><div class="fill" style="width:${x.v*10}%"></div></div><span class="v">${num(x.v)}</span></div>`).join('');
+
+// padrões
+const qsDoPadrao = id => Q.filter(q=>q.padrao===id || (q.padroes_secundarios||[]).includes(id));
+document.getElementById('pad').innerHTML = '<thead><tr><th>Padrão</th><th>Como reconhecer</th><th>Como atacar</th><th>Onde caiu</th></tr></thead><tbody>' +
+  T.padroes.map(p=>`<tr><td><b>${esc(p.nome)}</b><span class="pid">${p.id}</span></td><td>${esc(p.reconhecer)}</td><td>${esc(p.metodo)}</td><td>${qsDoPadrao(p.id).map(q=>`<a class="qlink" href="${pdf(q,'resolucao')}" target="_blank" rel="noopener">${q.ano} Q${q.n}</a>`).join('')||'<span class="empty">–</span>'}</td></tr>`).join('') + '</tbody>';
+
+// armadilhas por tópico
+const porTop = {};
+Q.forEach(q=>(q.armadilhas_tag||[]).forEach((slug,i)=>{ (porTop[slug] ||= []).push({txt:q.armadilhas[i], q}); }));
+document.getElementById('traps').innerHTML = Object.entries(porTop).sort((a,b)=>b[1].length-a[1].length).map(([slug,arr])=>
+  `<div class="trap"><h3>${esc(top[slug].nome)} <span class="meta">· ${arr.length}</span></h3><ul>${arr.map(a=>`<li>${esc(a.txt)} <span>${a.q.ano} Q${a.q.n}</span></li>`).join('')}</ul></div>`).join('');
+
+// banco
+const opt = (sel, arr, all) => { sel.innerHTML = `<option value="">${all}</option>` + arr.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join(''); };
+const fTop=document.getElementById('fTop'), fPad=document.getElementById('fPad'), fProva=document.getElementById('fProva'), fAno=document.getElementById('fAno'), fDif=document.getElementById('fDif');
+opt(fTop, T.topicos.map(t=>[t.slug,t.nome]), 'Todos');
+opt(fPad, T.padroes.map(p=>[p.id,p.nome]), 'Todos');
+opt(fProva, [...new Set(PROVAS.map(p=>p.prova))].map(x=>[x,x]), 'Todas');
+opt(fAno, [...new Set(anos)].map(a=>[a,a]), 'Todos');
+opt(fDif, [[1,'1 · aplicação direta'],[2,'2 · montar a estratégia'],[3,'3 · exige uma sacada']], 'Todas');
+const dif = d => '●'.repeat(d)+'○'.repeat(3-d);
+const card = (q, opts={}) => `<article class="qcard">
+  <div class="qtop"><span class="qid">${q.id}</span><span class="meta">${T.organizacao==='conteudo'?'':num(q.pontos)+' pontos · '}<span class="dots" title="dificuldade ${q.dificuldade} de 3">${dif(q.dificuldade)}</span></span></div>
+  <div>${esc(q.resumo)}</div>
+  <div class="tags">${q.topicos.map(s=>`<span class="tag">${esc(top[s].nome)}</span>`).join('')}<span class="tag p">${q.padrao}</span></div>
+  <div class="links"><a href="${pdf(q,'enunciado')}" target="_blank" rel="noopener">Enunciado</a>${opts.semResolucao?'':`<a class="r" href="${pdf(q,'resolucao')}" target="_blank" rel="noopener">Resolução</a>`}</div>
+  ${opts.gabarito?`<div class="key"><span class="lbl">Gabarito rápido</span><ol>${q.respostas.map(r=>`<li>${esc(r)}</li>`).join('')}</ol></div>`:''}
+</article>`;
+function render(){
+  const r = Q.filter(q=>(!fTop.value||q.topicos.includes(fTop.value)) && (!fPad.value||q.padrao===fPad.value||(q.padroes_secundarios||[]).includes(fPad.value)) && (!fProva.value||q.prova===fProva.value) && (!fAno.value||String(q.ano)===fAno.value) && (!fDif.value||String(q.dificuldade)===fDif.value));
+  document.getElementById('cards').innerHTML = r.length ? r.map(q=>card(q)).join('') : '<p class="empty">Nenhuma questão com esses filtros. Tire um dos filtros para ver mais.</p>';
+}
+[fTop,fPad,fProva,fAno,fDif].forEach(s=>s.addEventListener('change',render)); render();
+
+// simulado
+let sim=[], restante=0, timer=null, rodando=false, encerrado=false;
+const clock=document.getElementById('clock'), bStart=document.getElementById('bStart'), bEnd=document.getElementById('bEnd'), dur=document.getElementById('dur');
+const fmt = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+const SIM = D.simulado || {texto:'O sorteio respeita a estrutura das P2 analisadas, uma questão por posição, cada uma de um ano. O gabarito rápido e os links das resoluções só aparecem quando você encerra.', duracao:110, slots:[1,2,3].map(n=>({ids:Q.filter(q=>q.n===n).map(q=>q.id)}))};
+document.getElementById('simlead').textContent = SIM.texto;
+if (SIM.titulo) document.querySelector('#simulado h2').textContent = SIM.titulo;
+dur.value = String(SIM.duracao||110);
+if (SIM.blocos){
+  const bx=document.createElement('div'); bx.className='blocos'; bx.innerHTML = '<span class="lbl">Blocos que caem na sua prova</span>' + SIM.blocos.map((b,i)=>`<label class="chk" for="blk${i}"><input type="checkbox" id="blk${i}" data-i="${i}" checked> ${esc(b.nome)} <span class="meta">(${b.ids.length} questões)</span></label>`).join('');
+  document.querySelector('.sim').insertBefore(bx, document.querySelector('.simbar'));
+  bx.addEventListener('change', ()=>sortear());
+}
+function sortear(){
+  if (SIM.blocos){
+    const sel=[...document.querySelectorAll('.blocos input:checked')].map(i=>SIM.blocos[+i.dataset.i]);
+    const pool=sel.flatMap(b=>b.ids.map(id=>Q.find(q=>q.id===id)));
+    const k=Math.min(SIM.n||10,pool.length); const pick=pool.slice().sort(()=>Math.random()-0.5).slice(0,k);
+    sim=pick.sort((a,b)=>pool.indexOf(a)-pool.indexOf(b));
+    encerrado=false; parar(); restante=+dur.value*60; clock.textContent=fmt(restante); bStart.textContent='Começar'; bStart.disabled=!sim.length; desenhaSim(); return;
+  }
+  const slots=SIM.slots.map(s=>Q.filter(q=>s.ids.includes(q.id)));
+  for(let tent=0;tent<200;tent++){
+    const pick=slots.map(s=>s[Math.floor(Math.random()*s.length)]);
+    if(new Set(pick.map(q=>q.pid)).size===pick.length){ sim=pick; break; }
+  }
+  encerrado=false; parar(); restante=+dur.value*60; clock.textContent=fmt(restante); bStart.textContent='Começar'; bStart.disabled=false; desenhaSim();
+}
+function desenhaSim(){
+  document.getElementById('simqs').innerHTML = `<p class="empty" style="margin:0">${sim.length} questões${SIM.blocos?'':' · '+num(sim.reduce((a,q)=>a+q.pontos,0))+' pontos'}</p>` + sim.map((q,i)=>`<div class="simq"><div class="num">${i+1}</div>${card(q,{semResolucao:!encerrado, gabarito:encerrado})}</div>`).join('');
+}
+function parar(){ clearInterval(timer); timer=null; rodando=false; }
+bStart.addEventListener('click',()=>{
+  if(encerrado) return;
+  if(rodando){ parar(); bStart.textContent='Continuar'; return; }
+  rodando=true; bStart.textContent='Pausar';
+  timer=setInterval(()=>{ restante=Math.max(0,restante-1); clock.textContent=fmt(restante); if(!restante){ encerrar(); } },1000);
+});
+function encerrar(){ parar(); encerrado=true; bStart.disabled=true; bStart.textContent='Encerrado'; desenhaSim(); }
+bEnd.addEventListener('click',encerrar);
+document.getElementById('bNew').addEventListener('click',sortear);
+dur.addEventListener('change',()=>{ if(!rodando && !encerrado){ restante=+dur.value*60; clock.textContent=fmt(restante);} });
+sortear();
+
+// estude aqui
+const mats = {}; T.topicos.forEach(t=>{ (mats[t.grupo] ||= []).push(t); });
+const comMat = T.topicos.filter(t=>t.material||t.ref);
+document.getElementById('studylead').textContent = comMat.length ? 'Materiais da disciplina que cobrem cada tópico. Os links diretos entram quando o guia de teoria da Prisma estiver no ar.' : 'Ainda não há material de teoria vinculado a esta matéria. Enquanto isso, cada tópico abaixo leva às questões em que ele caiu.';
+document.getElementById('study').innerHTML = T.topicos.map(t=>{
+  const qs = Q.filter(q=>q.topicos.includes(t.slug));
+  const extra = (t.material||t.ref) ? `<p>${esc(t.material||'')}</p>` : `<p>${qs.map(q=>`<a class="qlink" href="${pdf(q,'resolucao')}" target="_blank" rel="noopener">${q.ano} Q${q.n}</a>`).join('')||'Ainda não caiu nas provas analisadas.'}</p>`;
+  return `<div><b>${esc(t.nome)}</b>${t.ref?` · <a href="${esc(t.ref)}" target="_blank" rel="noopener">abrir</a>`:''}${extra}</div>`; }).join('');
+
+document.getElementById('rodape').innerHTML = `<b>Fuja das P2</b> · uma iniciativa da chapa <b>Prisma</b> · Grêmio Politécnico · @prisma.poli<br>Transcrição e resolução: ${esc([...new Set(PROVAS.flatMap(p=>p.transcricao.concat(p.resolucao)))].join(', '))}. Revisão: ${PROVAS.some(p=>p.revisao.length)?esc([...new Set(PROVAS.flatMap(p=>p.revisao))].join(', ')):'pendente'}.`;
+
+// abre a seção pedida no link (#cai, #banco…)
+if(location.hash){ const el=document.getElementById(location.hash.slice(1)); if(el) el.scrollIntoView(); }
+})();
+</script>
+
+</body>
+</html>

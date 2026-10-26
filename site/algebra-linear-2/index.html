@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fuja das P2 · Álgebra Linear II</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: faixa azul de abertura com o símbolo da Prisma, depois seções empilhadas numa coluna de ~960px; mapa e tabelas rolam dentro de si no celular. */
+:root{
+  --azul:#0F2347; --laranja:#FF6B3D; --amarelo:#FFC845; --lilas:#C9A7FF;
+  --bg:#F8F6F2; --fg:#0F2347; --muted:#5B6478; --line:#DCD8CF; --card:#FFFFFF; --soft:#EFEBE3;
+  --band:#0F2347; --band-fg:#FFFFFF; --band-muted:#C9CEDA; --faixa-azul:#0F2347;
+  --tag:#EDE3FF; --tag-fg:#3B2A63; --warn-bg:#FFE7DE; --warn-fg:#7A2A12; --ok-bg:#FFF4D6;
+  --h0:#EEF1F6; --h1:#C6D2E6; --h2:#7F97C2; --h3:#0F2347; --h-fg-dark:#FFFFFF;
+  --f-display:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0B1730; --fg:#EEF0F5; --muted:#A3ACBF; --line:#25355A; --card:#12214A; --soft:#172A55;
+  --band:#08122A; --band-fg:#FFFFFF; --band-muted:#A3ACBF; --faixa-azul:#3A5590;
+  --tag:#2E2550; --tag-fg:#E3D5FF; --warn-bg:#3A1E19; --warn-fg:#FFC2AE; --ok-bg:#33290F;
+  --h0:#16264D; --h1:#2B4B86; --h2:#5D86CC; --h3:#B9CCF2; --h-fg-dark:#0B1730; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0B1730; --fg:#EEF0F5; --muted:#A3ACBF; --line:#25355A; --card:#12214A; --soft:#172A55;
+  --band:#08122A; --band-fg:#FFFFFF; --band-muted:#A3ACBF; --faixa-azul:#3A5590;
+  --tag:#2E2550; --tag-fg:#E3D5FF; --warn-bg:#3A1E19; --warn-fg:#FFC2AE; --ok-bg:#33290F;
+  --h0:#16264D; --h1:#2B4B86; --h2:#5D86CC; --h3:#B9CCF2; --h-fg-dark:#0B1730; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
+a{color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.lbl{font-size:.72rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h2{font-size:1.45rem;font-weight:700;letter-spacing:-.01em}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.faixa{display:grid;grid-template-columns:repeat(4,1fr);height:5px}
+.faixa i:nth-child(1){background:var(--faixa-azul)}.faixa i:nth-child(2){background:var(--laranja)}.faixa i:nth-child(3){background:var(--amarelo)}.faixa i:nth-child(4){background:var(--lilas)}
+/* topo */
+.band{background:var(--band);color:var(--band-fg)}
+.band .wrap{padding-block:34px 26px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.band svg{width:64px;height:auto}
+.band .eyebrow{color:var(--amarelo);font-size:.74rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase}
+.band h1{font-size:clamp(1.7rem,4.6vw,2.6rem);font-weight:700;line-height:1.1;margin-top:4px}
+.band .sub{color:var(--band-muted);margin-top:6px}
+.band .sub b{color:var(--band-fg);font-weight:500}
+.docs{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.docs a{font-size:.82rem;text-decoration:none;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:4px 11px;color:var(--band-fg)}
+.docs a:hover,.docs a:focus-visible{background:rgba(255,255,255,.1);outline:none}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+nav.toc .wrap{display:flex;gap:4px 16px;flex-wrap:wrap;padding-block:10px}
+nav.toc a{font-size:.85rem;text-decoration:none;color:var(--muted)}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--fg);text-decoration:underline;text-underline-offset:3px;outline:none}
+section{padding-block:34px;border-bottom:1px solid var(--line)}
+section .head{display:flex;flex-direction:column;gap:4px;margin-bottom:16px}
+section .lead{color:var(--muted);max-width:68ch;margin:0}
+.aviso{background:var(--warn-bg);color:var(--warn-fg);border-left:4px solid var(--laranja);padding:10px 14px;border-radius:2px;font-size:.92rem;margin-top:18px}
+.aviso + .aviso{margin-top:8px}
+/* mapa de calor */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.heat{border-collapse:separate;border-spacing:3px;min-width:560px;width:100%}
+table.heat th{font-size:.78rem;font-weight:500;color:var(--muted);text-align:left;padding:4px 6px;white-space:nowrap}
+table.heat th.col{text-align:center}
+table.heat td.t{font-size:.9rem;padding:4px 8px 4px 0;min-width:180px}
+table.heat td.t small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+table.heat td.c{text-align:center;padding:0}
+.cell{width:100%;min-width:64px;border:0;border-radius:3px;padding:9px 4px;font:500 .85rem var(--f-mono);cursor:pointer;color:var(--fg)}
+.cell[data-n="0"]{background:var(--h0);color:var(--muted);cursor:default}
+.cell[data-n="1"]{background:var(--h1)}
+.cell[data-n="2"]{background:var(--h2);color:#fff}
+.cell[data-n="3"]{background:var(--h3);color:var(--h-fg-dark)}
+.cell:focus-visible{outline:2px solid var(--laranja);outline-offset:1px}
+.cell.sel{box-shadow:0 0 0 2px var(--laranja)}
+.legend{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:18px;height:12px;border-radius:2px;display:inline-block}
+.detail{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:12px 14px;font-size:.92rem}
+.detail ul{margin:6px 0 0;padding-left:18px}
+/* quanto vale */
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:minmax(0,220px) 1fr 64px;gap:10px;align-items:center;font-size:.9rem}
+.bar .track{height:14px;background:var(--soft);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;background:var(--laranja)}
+.bar .v{text-align:right;font-family:var(--f-mono);font-size:.85rem}
+@media (max-width:560px){.bar{grid-template-columns:1fr 56px}.bar .track{grid-column:1/-1;order:3}}
+/* padrões */
+table.pad{border-collapse:collapse;width:100%;min-width:640px;font-size:.9rem}
+table.pad th{text-align:left;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line)}
+table.pad td{vertical-align:top;padding:10px;border-bottom:1px solid var(--line)}
+table.pad td:first-child{min-width:170px}
+table.pad td:last-child{min-width:92px}
+.pid{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);display:block}
+.qlink{display:inline-block;white-space:nowrap;font-family:var(--f-mono);font-size:.78rem;margin:0 6px 4px 0;text-decoration:none;border-bottom:1px solid var(--laranja)}
+/* armadilhas */
+.traps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.trap h3{font-size:1rem;font-weight:700;margin-bottom:6px}
+.trap ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:.92rem}
+.trap li span{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);white-space:nowrap}
+/* banco */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.filters label{display:flex;flex-direction:column;gap:3px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+select,button{font:inherit;font-size:.9rem}
+select{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:3px;padding:6px 8px;min-width:120px;max-width:100%}
+.cards{display:grid;gap:12px}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:grid;gap:8px}
+.qtop{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline}
+.qid{font-family:var(--f-mono);font-weight:500;font-size:.92rem}
+.meta{font-size:.8rem;color:var(--muted)}
+.dots{letter-spacing:2px;color:var(--laranja)}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{background:var(--tag);color:var(--tag-fg);font-size:.75rem;border-radius:2px;padding:2px 7px}
+.tag.p{background:transparent;border:1px solid var(--line);color:var(--muted);font-family:var(--f-mono)}
+.links{display:flex;gap:14px;flex-wrap:wrap;font-size:.88rem}
+.links a{font-weight:500;text-decoration:none;border-bottom:2px solid var(--laranja)}
+.links a.r{border-bottom-color:var(--lilas)}
+.empty{color:var(--muted);font-size:.92rem}
+/* simulado */
+.sim{display:grid;gap:14px}
+.simbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:12px 14px}
+.clock{font-family:var(--f-mono);font-size:2rem;font-weight:500;min-width:7ch;font-variant-numeric:tabular-nums}
+.btn{border:1px solid var(--fg);background:transparent;color:var(--fg);border-radius:3px;padding:7px 14px;cursor:pointer}
+.btn.pri{background:var(--laranja);border-color:var(--laranja);color:#0F2347;font-weight:500}
+.btn:focus-visible{outline:2px solid var(--laranja);outline-offset:2px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.dur{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted)}
+.dur select{min-width:auto}
+.blocos{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.blocos .lbl{width:100%}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:.92rem;cursor:pointer}
+.chk input{accent-color:var(--laranja);width:16px;height:16px}
+.simq{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:grid;gap:6px}
+.simq .num{font-weight:700;color:var(--laranja);font-size:1.4rem;line-height:1}
+.key{background:var(--ok-bg);border-radius:3px;padding:10px 12px;font-size:.9rem}
+.key ol{margin:4px 0 0;padding-left:20px}
+.study{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 24px}
+.study div{border-top:1px solid var(--line);padding-top:8px}
+.study b{font-weight:500}
+.study p{margin:2px 0 0;color:var(--muted);font-size:.88rem}
+footer{padding-block:26px 40px;color:var(--muted);font-size:.85rem}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:520px){.band .wrap{grid-template-columns:1fr}.band svg{width:48px}}
+</style>
+
+<style>.volta{background:var(--band);color:var(--band-fg);border-bottom:1px solid rgba(255,255,255,.12)}.volta .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:10px;font-size:.85rem}.volta a{color:var(--band-fg);text-decoration:none;font-weight:500}.volta a:hover,.volta a:focus-visible{text-decoration:underline;text-underline-offset:3px;outline:none}.volta .mono{color:var(--band-muted);letter-spacing:.08em}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="volta"><div class="wrap"><a href="../index.html">← Fuja das P2</a><span class="mono">MAT3458</span></div></div>
+<header class="band">
+  <div class="wrap">
+    <svg viewBox="0 0 381 414" role="img" aria-label="Símbolo da chapa Prisma"><polygon points="122,8 12,81 123,148" fill="#FFC845"/><polygon points="132,9 371,156 260,230 132,153" fill="#FF6B3D"/><polygon points="10,88 123,156 123,324 9,404" fill="#3A5590"/><polygon points="132,240 193,200 252,235 132,319" fill="#C9A7FF"/></svg>
+    <div style="min-width:0">
+      <div class="eyebrow">Fuja das P2 · Raio-X da matéria</div>
+      <h1 id="titulo"></h1>
+      <div class="sub" id="sub"></div>
+      <div class="docs" id="docs"></div>
+    </div>
+  </div>
+  <div class="faixa"><i></i><i></i><i></i><i></i></div>
+</header>
+<nav class="toc" aria-label="Seções"><div class="wrap">
+  <a href="#cai">O que cai</a><a href="#vale">Quanto vale</a><a href="#padroes">Padrões</a><a href="#armadilhas">Armadilhas</a><a href="#banco">Banco</a><a href="#simulado">Simulado</a><a href="#estude">Estude aqui</a>
+</div></nav>
+
+<main class="wrap">
+  <div id="avisos"></div>
+
+  <section id="cai">
+    <div class="head"><span class="lbl">O que cai</span><h2>Em quais provas cada assunto apareceu</h2>
+      <p class="lead">Cada célula conta em quantas provas o tópico apareceu. Toque numa célula para ver as questões.</p></div>
+    <div class="scroll"><table class="heat" id="heat"></table></div>
+    <div class="legend" id="legend"></div>
+    <div class="detail" id="heatdetail">Toque numa célula colorida para listar as questões daquele tópico.</div>
+  </section>
+
+  <section id="vale">
+    <div class="head"><span class="lbl">Quanto vale</span><h2>Quanto da nota costuma depender de cada assunto</h2>
+      <p class="lead">Média, por prova, dos pontos das questões que usam o tópico (de 10). Uma questão costuma usar vários tópicos, então a soma passa de 10.</p></div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <section id="padroes">
+    <div class="head"><span class="lbl">Padrões de questão</span><h2>Como reconhecer e como atacar</h2>
+      <p class="lead">Os tipos de questão que se repetem. Os códigos levam à página da resolução.</p></div>
+    <div class="scroll"><table class="pad" id="pad"></table></div>
+  </section>
+
+  <section id="armadilhas">
+    <div class="head"><span class="lbl">Armadilhas que mais derrubam</span><h2>Os erros que custam pontos, por assunto</h2></div>
+    <div class="traps" id="traps"></div>
+  </section>
+
+  <section id="banco">
+    <div class="head"><span class="lbl">Banco de questões</span><h2>Todas as questões, com filtro</h2></div>
+    <div class="filters">
+      <label for="fTop">Tópico<select id="fTop"></select></label>
+      <label for="fPad">Padrão<select id="fPad"></select></label>
+      <label for="fProva">Prova<select id="fProva"></select></label>
+      <label for="fAno">Ano<select id="fAno"></select></label>
+      <label for="fDif">Dificuldade<select id="fDif"></select></label>
+    </div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section id="simulado">
+    <div class="head"><span class="lbl">Simulado</span><h2>Monte uma P2 com questões de anos diferentes</h2>
+      <p class="lead" id="simlead"></p></div>
+    <div class="sim">
+      <div class="simbar">
+        <div class="clock" id="clock" aria-live="off">110:00</div>
+        <button class="btn pri" id="bStart" type="button">Começar</button>
+        <button class="btn" id="bEnd" type="button">Encerrar e ver resolução</button>
+        <button class="btn" id="bNew" type="button">Sortear outra</button>
+        <label class="dur" for="dur">Duração
+          <select id="dur"><option value="90">90 min</option><option value="100">100 min</option><option value="110">110 min</option><option value="120">120 min</option></select></label>
+      </div>
+      <p class="empty" style="margin:0">A duração não consta nas provas analisadas; ajuste ao tempo da sua turma.</p>
+      <div id="simqs" class="cards"></div>
+    </div>
+  </section>
+
+  <section id="estude">
+    <div class="head"><span class="lbl">Estude aqui</span><h2>Onde estudar cada tópico</h2>
+      <p class="lead" id="studylead"></p></div>
+    <div class="study" id="study"></div>
+  </section>
+</main>
+<footer class="wrap" id="rodape"></footer>
+
+<script id="dados" type="application/json">{"taxonomia": {"codigo": "MAT3458", "materia": "Álgebra Linear II", "status": "proposta — aguardando OK do coordenador da matéria", "organizacao": "conteudo", "nota_organizacao": "Na Poli, a divisão do conteúdo entre P1 e P2 muda de engenharia para engenharia (o ritmo do pilar é diferente). Por isso esta matéria está organizada por blocos de conteúdo: confira no programa da sua turma quais blocos caem na sua prova.", "guia_teoria": null, "topicos": [{"slug": "produto-interno", "nome": "Produto interno e norma", "grupo": "Produto interno e ortogonalidade", "ref": null, "material": null}, {"slug": "ortogonalidade", "nome": "Ortogonalidade e complemento ortogonal", "grupo": "Produto interno e ortogonalidade", "ref": null, "material": null}, {"slug": "projecao", "nome": "Projeção ortogonal", "grupo": "Produto interno e ortogonalidade", "ref": null, "material": null}, {"slug": "gram-schmidt", "nome": "Processo de Gram-Schmidt", "grupo": "Produto interno e ortogonalidade", "ref": null, "material": null}, {"slug": "base-ortonormal", "nome": "Coordenadas em base ortogonal", "grupo": "Produto interno e ortogonalidade", "ref": null, "material": null}, {"slug": "minimos-quadrados", "nome": "Melhor aproximação em espaços de funções", "grupo": "Produto interno e ortogonalidade", "ref": null, "material": null}, {"slug": "tl-definicao", "nome": "Linearidade", "grupo": "Transformações lineares", "ref": null, "material": null}, {"slug": "tl-base", "nome": "TL determinada numa base", "grupo": "Transformações lineares", "ref": null, "material": null}, {"slug": "nucleo-imagem", "nome": "Núcleo, imagem e posto", "grupo": "Transformações lineares", "ref": null, "material": null}, {"slug": "teorema-nucleo-imagem", "nome": "Teorema do núcleo e da imagem", "grupo": "Transformações lineares", "ref": null, "material": null}, {"slug": "injetora-sobrejetora", "nome": "Injetividade, sobrejetividade e isomorfismo", "grupo": "Transformações lineares", "ref": null, "material": null}, {"slug": "matriz-tl", "nome": "Matriz de uma TL em bases", "grupo": "Transformações lineares", "ref": null, "material": null}], "padroes": [{"id": "P-PI", "nome": "Contas com produto interno dado", "reconhecer": "Produto interno não usual (pesos, termos cruzados) e pedido de norma, ortogonalidade ou parâmetro", "metodo": "Use SEMPRE a fórmula do enunciado, inclusive na norma; para ver se é produto interno, teste positividade primeiro (é a que mais falha)."}, {"id": "P-PERP", "nome": "Complemento ortogonal", "reconhecer": "S dado por sistema ou geradores; pedem base ou dimensão de S⊥", "metodo": "S dado por sistema homogêneo: S⊥ = espaço das linhas (escalone e pegue as linhas não nulas). dim S⊥ = dim V − dim S."}, {"id": "P-PROJ", "nome": "Projeção ortogonal", "reconhecer": "proj_S v, decomposição v = w₁ + w₂, v − (au₁ + bu₂) ∈ S⊥", "metodo": "Base ortogonal: some ⟨v,uᵢ⟩/‖uᵢ‖² uᵢ. Base não ortogonal: resolva o sistema de Gram [⟨uᵢ,uⱼ⟩][coef] = [⟨uᵢ,v⟩] ou ortogonalize antes."}, {"id": "P-APROX", "nome": "Minimizar uma integral", "reconhecer": "∫(f − combinação)² mínima, ou raiz dela", "metodo": "É distância ao quadrado: a resposta é a projeção de f no subespaço, com ⟨f,g⟩ = ∫fg no intervalo dado. Use paridade para zerar produtos internos."}, {"id": "P-GS", "nome": "Gram-Schmidt", "reconhecer": "Base dada e pedido de vetor da base ortogonal/ortonormal", "metodo": "vₖ = uₖ − Σ ⟨uₖ,vᵢ⟩/‖vᵢ‖² vᵢ, na ordem dada; normalize só se pedirem. Produto interno por valores em pontos: vire vetores de Rⁿ."}, {"id": "P-COORD", "nome": "Coordenadas em base ortogonal", "reconhecer": "Base ortonormal (ou ortogonal com normas dadas) e pedido de coordenadas ou produto interno", "metodo": "Ortonormal: coordenada = ⟨v, eᵢ⟩. Ortogonal: ⟨Σaᵢeᵢ, Σbᵢeᵢ⟩ = Σ aᵢbᵢ‖eᵢ‖². Não resolva sistema."}, {"id": "P-TL-BASE", "nome": "TL dada numa base", "reconhecer": "T conhecida em alguns vetores; pedem T de outro vetor", "metodo": "Escreva o vetor como combinação dos vetores dados (sistema) e aplique linearidade."}, {"id": "P-NUCLEO", "nome": "Núcleo, imagem e posto", "reconhecer": "T por fórmula ou matriz; pedem núcleo, imagem, dimensão ou parâmetro", "metodo": "Monte a matriz e escalone: posto = dim Im; dim Ker = dim domínio − posto. Parâmetros: imponha o posto pedido."}, {"id": "P-MATRIZ", "nome": "Matriz em bases", "reconhecer": "[T]_BC dada; pedem T(v) ou propriedades", "metodo": "Coordenadas de v em B → multiplica → coordenadas em C → volta à canônica. Com B ≠ C, [T]_BC² não é [T²]."}, {"id": "P-AFIRMACOES", "nome": "Verdadeiro ou falso teórico", "reconhecer": "Afirmações (I), (II), (III) sobre existência de TL, dimensões, ortogonalidade", "metodo": "Para cada uma: conta de dimensão (núcleo + imagem; ortogonais não nulos são LI) ou contraexemplo pequeno em R² ou R³."}], "blocos": [{"id": "b1", "nome": "Produto interno, ortogonalidade e projeção", "slug": "produto-interno", "grupo": "Produto interno e ortogonalidade"}, {"id": "b2", "nome": "Transformações lineares", "slug": "transformacoes-lineares", "grupo": "Transformações lineares"}]}, "provas": [{"id": "MAT3458-2023-P2", "codigo": "MAT3458", "materia": "Álgebra Linear II", "prova": "P2", "ano": 2023, "data": null, "professor": null, "duracao_min": null, "status": "rascunho", "formato": "múltipla escolha", "alternativas": "reordenadas pela Prisma (no original o gabarito era sempre (a))", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "questoes": [{"n": 1, "id": "MAT3458-2023-P2-Q1", "pontos": 0.714, "topicos": ["produto-interno"], "padrao": "P-PI", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 1, "pagina_resolucao": 1, "resumo": "Quais expressões definem produto interno em R².", "armadilhas": ["Esquecer de testar a positividade ⟨u,u⟩ > 0 para u ≠ 0"], "armadilhas_tag": ["produto-interno"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 2, "id": "MAT3458-2023-P2-Q2", "pontos": 0.714, "topicos": ["ortogonalidade", "produto-interno"], "padrao": "P-PERP", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 1, "pagina_resolucao": 2, "resumo": "S⊥ de S = [1+x, x²] em P₂ com produto interno integral em [−1, 1].", "armadilhas": ["Esperar dois vetores na base de S⊥ (a dimensão é 1)"], "armadilhas_tag": ["ortogonalidade"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 3, "id": "MAT3458-2023-P2-Q3", "pontos": 0.714, "topicos": ["projecao"], "padrao": "P-PROJ", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 2, "resumo": "Projeção de (1,3,3,1) em S = [u₁, u₂] de R⁴ (base não ortogonal).", "armadilhas": ["Somar projeções em base não ortogonal"], "armadilhas_tag": ["projecao"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 4, "id": "MAT3458-2023-P2-Q4", "pontos": 0.714, "topicos": ["minimos-quadrados", "projecao"], "padrao": "P-APROX", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 3, "resumo": "Minimizar ∫(a sen x + b cos x + c cos 2x − x)²: projeção de x em base trigonométrica.", "armadilhas": ["Esquecer de dividir por ‖sen x‖² = π"], "armadilhas_tag": ["minimos-quadrados"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 5, "id": "MAT3458-2023-P2-Q5", "pontos": 0.714, "topicos": ["produto-interno", "ortogonalidade"], "padrao": "P-PI", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "Produto interno não usual em R²: (1, t) base de [(2,1)]⊥.", "armadilhas": ["Usar o produto escalar usual"], "armadilhas_tag": ["produto-interno"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 6, "id": "MAT3458-2023-P2-Q6", "pontos": 0.714, "topicos": ["projecao", "ortogonalidade"], "padrao": "P-PROJ", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "Decompor v = w₁ + w₂ com W de base ortogonal em R³.", "armadilhas": ["Confundir w₁ (em W) com w₂ (em W⊥)"], "armadilhas_tag": ["projecao"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 7, "id": "MAT3458-2023-P2-Q7", "pontos": 0.714, "topicos": ["gram-schmidt"], "padrao": "P-GS", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 5, "resumo": "Gram-Schmidt em R³: primeira coordenada de v₃ normalizado.", "armadilhas": ["Esquecer de normalizar v₃"], "armadilhas_tag": ["gram-schmidt"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 8, "id": "MAT3458-2023-P2-Q8", "pontos": 0.714, "topicos": ["tl-base"], "padrao": "P-TL-BASE", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 3, "pagina_resolucao": 6, "resumo": "TL em P₂ dada numa base: coeficiente de x em T(4 − x + 3x²).", "armadilhas": ["Montar errado o sistema de coordenadas"], "armadilhas_tag": ["tl-base"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 9, "id": "MAT3458-2023-P2-Q9", "pontos": 0.714, "topicos": ["injetora-sobrejetora", "nucleo-imagem"], "padrao": "P-NUCLEO", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 3, "pagina_resolucao": 6, "resumo": "T(p) = (p(0), p(1), p'(1)): injetividade/bijetividade.", "armadilhas": ["Aceitar alternativa que viola dim Ker + dim Im = 3"], "armadilhas_tag": ["injetora-sobrejetora"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 10, "id": "MAT3458-2023-P2-Q10", "pontos": 0.714, "topicos": ["nucleo-imagem", "tl-base"], "padrao": "P-NUCLEO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 7, "resumo": "T: R³ → P₁ dada numa base: dimensão do núcleo e condição sobre (1, b, c).", "armadilhas": ["Usar as coordenadas como se fossem o vetor do núcleo"], "armadilhas_tag": ["nucleo-imagem"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 11, "id": "MAT3458-2023-P2-Q11", "pontos": 0.714, "topicos": ["base-ortonormal", "produto-interno"], "padrao": "P-COORD", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 4, "pagina_resolucao": 8, "resumo": "Produto interno em base ortogonal com normas dadas.", "armadilhas": ["Esquecer os pesos ‖eᵢ‖² (base só ortogonal)"], "armadilhas_tag": ["base-ortonormal"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 12, "id": "MAT3458-2023-P2-Q12", "pontos": 0.714, "topicos": ["base-ortonormal"], "padrao": "P-COORD", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 4, "pagina_resolucao": 8, "resumo": "Coordenadas de (1,0,1,0) em base ortonormal de R⁴.", "armadilhas": ["Perder um fator de normalização"], "armadilhas_tag": ["base-ortonormal"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 13, "id": "MAT3458-2023-P2-Q13", "pontos": 0.714, "topicos": ["ortogonalidade", "teorema-nucleo-imagem"], "padrao": "P-PERP", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 4, "pagina_resolucao": 9, "resumo": "dim S⊥ para S = matrizes simétricas em M₃ com ⟨A,B⟩ = tr(AᵗB).", "armadilhas": ["Responder dim S em vez de dim S⊥"], "armadilhas_tag": ["ortogonalidade"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 14, "id": "MAT3458-2023-P2-Q14", "pontos": 0.714, "topicos": ["projecao", "ortogonalidade"], "padrao": "P-AFIRMACOES", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 5, "pagina_resolucao": 10, "resumo": "V/F: soma de projeções, vetor ortogonal a uma base, conjunto gerador vs. base.", "armadilhas": ["Usar soma de projeções com base não ortogonal"], "armadilhas_tag": ["projecao"], "gabarito": "c", "respostas": ["(c)"]}]}, {"id": "MAT3458-2024-P2", "codigo": "MAT3458", "materia": "Álgebra Linear II", "prova": "P2", "ano": 2024, "data": null, "professor": null, "duracao_min": null, "status": "rascunho", "formato": "múltipla escolha", "alternativas": "reordenadas pela Prisma (no original o gabarito era sempre (a))", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "questoes": [{"n": 1, "id": "MAT3458-2024-P2-Q1", "pontos": 0.714, "topicos": ["ortogonalidade"], "padrao": "P-PERP", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 1, "pagina_resolucao": 1, "resumo": "S dado por sistema homogêneo em R⁴; (1,1,a,b) ∈ S⊥: calcular a + b.", "armadilhas": ["Colocar o vetor em S (resolver o sistema) em vez de escrevê-lo como combinação das linhas"], "armadilhas_tag": ["ortogonalidade"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 2, "id": "MAT3458-2024-P2-Q2", "pontos": 0.714, "topicos": ["projecao"], "padrao": "P-PROJ", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 1, "pagina_resolucao": 2, "resumo": "Projeção de v ∈ R⁵ em S = [u₁, u₂] (base não ortogonal): a + b.", "armadilhas": ["Usar a fórmula de base ortogonal com u₁, u₂ não ortogonais"], "armadilhas_tag": ["projecao"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 3, "id": "MAT3458-2024-P2-Q3", "pontos": 0.714, "topicos": ["minimos-quadrados", "projecao"], "padrao": "P-APROX", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 2, "resumo": "Minimizar ∫(sen x − ax − b)² em [−π, π]: projeção de sen x em [1, x].", "armadilhas": ["Responder o produto interno ⟨sen x, x⟩ sem dividir por ‖x‖²"], "armadilhas_tag": ["minimos-quadrados"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 4, "id": "MAT3458-2024-P2-Q4", "pontos": 0.714, "topicos": ["tl-base"], "padrao": "P-TL-BASE", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 2, "pagina_resolucao": 3, "resumo": "T: R² → M₂(R) dada em (1,2) e (2,1): soma das entradas de T(1,1).", "armadilhas": ["Esquecer o fator 1/3 ao escrever (1,1) como combinação"], "armadilhas_tag": ["tl-base"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 5, "id": "MAT3458-2024-P2-Q5", "pontos": 0.714, "topicos": ["gram-schmidt", "produto-interno"], "padrao": "P-GS", "padroes_secundarios": [], "dificuldade": 3, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "Gram-Schmidt em P₂ com ⟨p,q⟩ = Σ p(k)q(k), k ∈ {−1,0,1}: soma dos coeficientes de q₃.", "armadilhas": ["Usar o produto interno integral em vez do definido no enunciado"], "armadilhas_tag": ["gram-schmidt"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 6, "id": "MAT3458-2024-P2-Q6", "pontos": 0.714, "topicos": ["ortogonalidade", "teorema-nucleo-imagem", "tl-base"], "padrao": "P-AFIRMACOES", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 5, "resumo": "V/F: ortogonais em R²³⁷, núcleo da projeção em U⊥, existência de TL R² → P₃.", "armadilhas": ["Achar que três valores em R² podem ser escolhidos livremente para uma TL"], "armadilhas_tag": ["tl-base"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 7, "id": "MAT3458-2024-P2-Q7", "pontos": 0.714, "topicos": ["tl-definicao"], "padrao": "P-AFIRMACOES", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 3, "pagina_resolucao": 6, "resumo": "Quais funções são lineares: operador diferencial, X ↦ A X B, polinômio de matriz.", "armadilhas": ["Achar que o A² na (III) quebra a linearidade"], "armadilhas_tag": ["tl-definicao"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 8, "id": "MAT3458-2024-P2-Q8", "pontos": 0.714, "topicos": ["teorema-nucleo-imagem", "nucleo-imagem"], "padrao": "P-AFIRMACOES", "padroes_secundarios": [], "dificuldade": 3, "pagina_enunciado": 3, "pagina_resolucao": 7, "resumo": "W = {p ∈ P₃ : p(0) = p''(0) = 0}: existência de TL com núcleo W e imagem dada.", "armadilhas": ["Esquecer que, com W ⊂ Ker, a imagem tem dimensão no máximo 2"], "armadilhas_tag": ["teorema-nucleo-imagem"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 9, "id": "MAT3458-2024-P2-Q9", "pontos": 0.714, "topicos": ["nucleo-imagem", "teorema-nucleo-imagem"], "padrao": "P-NUCLEO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 4, "pagina_resolucao": 8, "resumo": "T: R³ → R⁴ com parâmetros a, b; dim Ker = 1: calcular a + b.", "armadilhas": ["Impor só uma condição de posto e deixar um parâmetro livre"], "armadilhas_tag": ["nucleo-imagem"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 10, "id": "MAT3458-2024-P2-Q10", "pontos": 0.714, "topicos": ["nucleo-imagem", "matriz-tl"], "padrao": "P-NUCLEO", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 4, "pagina_resolucao": 8, "resumo": "T: R⁴ → P₃ dada por fórmula: dimensão da imagem.", "armadilhas": ["Contar termos em vez de calcular o posto"], "armadilhas_tag": ["nucleo-imagem"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 11, "id": "MAT3458-2024-P2-Q11", "pontos": 0.714, "topicos": ["produto-interno", "ortogonalidade"], "padrao": "P-PI", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 4, "pagina_resolucao": 9, "resumo": "Produto interno não usual em R²: x ⊥ u e ⟨x, v⟩ = −7; calcular ‖x‖.", "armadilhas": ["Calcular a norma usual em vez da norma do produto interno dado"], "armadilhas_tag": ["produto-interno"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 12, "id": "MAT3458-2024-P2-Q12", "pontos": 0.714, "topicos": ["ortogonalidade"], "padrao": "P-AFIRMACOES", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 4, "pagina_resolucao": 10, "resumo": "S₁ e S₂ mutuamente ortogonais: qual inclusão ou identidade vale.", "armadilhas": ["Usar Pitágoras sem os quadrados"], "armadilhas_tag": ["ortogonalidade"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 13, "id": "MAT3458-2024-P2-Q13", "pontos": 0.714, "topicos": ["injetora-sobrejetora", "teorema-nucleo-imagem"], "padrao": "P-NUCLEO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 5, "pagina_resolucao": 10, "resumo": "T: P₂ → P₄ com imagem gerada por três polinômios; T não injetora: calcular ab.", "armadilhas": ["Esquecer que não injetora equivale a imagem de dimensão menor que 3"], "armadilhas_tag": ["injetora-sobrejetora"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 14, "id": "MAT3458-2024-P2-Q14", "pontos": 0.714, "topicos": ["base-ortonormal"], "padrao": "P-COORD", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 5, "pagina_resolucao": 11, "resumo": "Coordenadas de um vetor em base ortonormal de R⁴: combinação √7α + √119β + √51γ + √3δ.", "armadilhas": ["Resolver sistema em vez de usar ⟨v, eᵢ⟩"], "armadilhas_tag": ["base-ortonormal"], "gabarito": "c", "respostas": ["(c)"]}]}, {"id": "MAT3458-2025-P2", "codigo": "MAT3458", "materia": "Álgebra Linear II", "prova": "P2", "ano": 2025, "data": null, "professor": null, "duracao_min": null, "status": "rascunho", "formato": "múltipla escolha", "alternativas": "reordenadas pela Prisma (no original o gabarito era sempre (a))", "transcricao": ["Daniel Travassos"], "resolucao": ["Daniel Travassos"], "revisao": [], "questoes": [{"n": 1, "id": "MAT3458-2025-P2-Q1", "pontos": 0.714, "topicos": ["tl-base"], "padrao": "P-TL-BASE", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 1, "pagina_resolucao": 1, "resumo": "T: P₂ → R² dada numa base: soma das coordenadas de T(4 − 3x + 2x²).", "armadilhas": ["Errar sinais no sistema das coordenadas"], "armadilhas_tag": ["tl-base"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 2, "id": "MAT3458-2025-P2-Q2", "pontos": 0.714, "topicos": ["minimos-quadrados", "projecao"], "padrao": "P-APROX", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 1, "pagina_resolucao": 2, "resumo": "Minimizar ∫(sen x − ax − b)² em [−π/2, π/2].", "armadilhas": ["Usar o intervalo errado ao calcular ‖x‖²"], "armadilhas_tag": ["minimos-quadrados"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 3, "id": "MAT3458-2025-P2-Q3", "pontos": 0.714, "topicos": ["nucleo-imagem"], "padrao": "P-NUCLEO", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 1, "pagina_resolucao": 2, "resumo": "Núcleo de T: R³ → R²; razão (a + b)/c.", "armadilhas": ["Errar o escalonamento do sistema homogêneo"], "armadilhas_tag": ["nucleo-imagem"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 4, "id": "MAT3458-2025-P2-Q4", "pontos": 0.714, "topicos": ["nucleo-imagem"], "padrao": "P-NUCLEO", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 3, "resumo": "Qual vetor está na imagem de T: R³ → R³.", "armadilhas": ["Testar alternativas uma a uma em vez de achar a equação da imagem"], "armadilhas_tag": ["nucleo-imagem"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 5, "id": "MAT3458-2025-P2-Q5", "pontos": 0.714, "topicos": ["ortogonalidade", "teorema-nucleo-imagem"], "padrao": "P-PERP", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "dim S⊥ para S dado por três equações (uma redundante) em R⁴.", "armadilhas": ["Contar equações sem checar redundância"], "armadilhas_tag": ["ortogonalidade"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 6, "id": "MAT3458-2025-P2-Q6", "pontos": 0.714, "topicos": ["produto-interno", "ortogonalidade"], "padrao": "P-AFIRMACOES", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 2, "pagina_resolucao": 4, "resumo": "V/F sobre ortogonalidade em P₂ com dois produtos internos diferentes.", "armadilhas": ["Achar que ortogonalidade vale para qualquer produto interno"], "armadilhas_tag": ["produto-interno"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 7, "id": "MAT3458-2025-P2-Q7", "pontos": 0.714, "topicos": ["ortogonalidade"], "padrao": "P-PI", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 2, "pagina_resolucao": 5, "resumo": "Condição em a, b para {u, v, w} ortogonal em R⁴.", "armadilhas": ["Testar só um par de vetores"], "armadilhas_tag": ["ortogonalidade"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 8, "id": "MAT3458-2025-P2-Q8", "pontos": 0.714, "topicos": ["matriz-tl"], "padrao": "P-MATRIZ", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 6, "resumo": "Matriz de T em bases B e C: calcular T(1,2,3).", "armadilhas": ["Esquecer de converter coordenadas de/para as bases"], "armadilhas_tag": ["matriz-tl"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 9, "id": "MAT3458-2025-P2-Q9", "pontos": 0.714, "topicos": ["teorema-nucleo-imagem", "injetora-sobrejetora"], "padrao": "P-AFIRMACOES", "padroes_secundarios": [], "dificuldade": 1, "pagina_enunciado": 3, "pagina_resolucao": 6, "resumo": "T: R² → P₂ com núcleo de dimensão 1: comparar dimensões.", "armadilhas": ["Achar que T pode ser sobrejetora sobre um espaço de dimensão maior"], "armadilhas_tag": ["teorema-nucleo-imagem"], "gabarito": "a", "respostas": ["(a)"]}, {"n": 10, "id": "MAT3458-2025-P2-Q10", "pontos": 0.714, "topicos": ["ortogonalidade"], "padrao": "P-PERP", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 3, "pagina_resolucao": 7, "resumo": "Base de W⊥ para W dado por sistema em R⁴.", "armadilhas": ["Dar as três linhas (LD) como base"], "armadilhas_tag": ["ortogonalidade"], "gabarito": "e", "respostas": ["(e)"]}, {"n": 11, "id": "MAT3458-2025-P2-Q11", "pontos": 0.714, "topicos": ["injetora-sobrejetora", "teorema-nucleo-imagem"], "padrao": "P-AFIRMACOES", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 4, "pagina_resolucao": 8, "resumo": "V/F sobre operadores injetores/sobrejetores em dimensão finita.", "armadilhas": ["Esquecer que, em operador de dimensão finita, injetor equivale a sobrejetor"], "armadilhas_tag": ["injetora-sobrejetora"], "gabarito": "d", "respostas": ["(d)"]}, {"n": 12, "id": "MAT3458-2025-P2-Q12", "pontos": 0.714, "topicos": ["matriz-tl", "injetora-sobrejetora"], "padrao": "P-MATRIZ", "padroes_secundarios": [], "dificuldade": 3, "pagina_enunciado": 4, "pagina_resolucao": 9, "resumo": "Operador com matriz [[0,1],[1,0]] em bases B ≠ C: quais afirmações valem.", "armadilhas": ["Tratar [T]_BC como se fosse [T]_B"], "armadilhas_tag": ["matriz-tl"], "gabarito": "b", "respostas": ["(b)"]}, {"n": 13, "id": "MAT3458-2025-P2-Q13", "pontos": 0.714, "topicos": ["projecao", "gram-schmidt"], "padrao": "P-PROJ", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 4, "pagina_resolucao": 10, "resumo": "Projeção de (0,1,1) em S ⊂ R³ de base não ortogonal.", "armadilhas": ["Somar projeções em base não ortogonal"], "armadilhas_tag": ["projecao"], "gabarito": "c", "respostas": ["(c)"]}, {"n": 14, "id": "MAT3458-2025-P2-Q14", "pontos": 0.714, "topicos": ["minimos-quadrados", "projecao"], "padrao": "P-APROX", "padroes_secundarios": [], "dificuldade": 2, "pagina_enunciado": 5, "pagina_resolucao": 10, "resumo": "Projeção de t + 2t² em P₁ com produto interno integral em [−2, 2].", "armadilhas": ["Truncar o polinômio em vez de projetar"], "armadilhas_tag": ["minimos-quadrados"], "gabarito": "b", "respostas": ["(b)"]}]}], "atualizado": "22/10/2026", "simulado": {"titulo": "Monte uma prova com os blocos da sua turma", "duracao": 100, "n": 10, "texto": "Escolha os blocos de conteúdo que caem na sua prova (isso varia entre engenharias). O sorteio pega 10 questões desses blocos, de anos diferentes, na ordem dos assuntos. O gabarito e os links das resoluções só aparecem quando você encerra.", "blocos": [{"nome": "Produto interno, ortogonalidade e projeção", "ids": ["MAT3458-2023-P2-Q1", "MAT3458-2023-P2-Q2", "MAT3458-2023-P2-Q3", "MAT3458-2023-P2-Q4", "MAT3458-2023-P2-Q5", "MAT3458-2023-P2-Q6", "MAT3458-2023-P2-Q7", "MAT3458-2023-P2-Q11", "MAT3458-2023-P2-Q12", "MAT3458-2023-P2-Q13", "MAT3458-2023-P2-Q14", "MAT3458-2024-P2-Q1", "MAT3458-2024-P2-Q2", "MAT3458-2024-P2-Q3", "MAT3458-2024-P2-Q5", "MAT3458-2024-P2-Q6", "MAT3458-2024-P2-Q11", "MAT3458-2024-P2-Q12", "MAT3458-2024-P2-Q14", "MAT3458-2025-P2-Q2", "MAT3458-2025-P2-Q5", "MAT3458-2025-P2-Q6", "MAT3458-2025-P2-Q7", "MAT3458-2025-P2-Q10", "MAT3458-2025-P2-Q13", "MAT3458-2025-P2-Q14"]}, {"nome": "Transformações lineares", "ids": ["MAT3458-2023-P2-Q8", "MAT3458-2023-P2-Q9", "MAT3458-2023-P2-Q10", "MAT3458-2024-P2-Q4", "MAT3458-2024-P2-Q7", "MAT3458-2024-P2-Q8", "MAT3458-2024-P2-Q9", "MAT3458-2024-P2-Q10", "MAT3458-2024-P2-Q13", "MAT3458-2025-P2-Q1", "MAT3458-2025-P2-Q3", "MAT3458-2025-P2-Q4", "MAT3458-2025-P2-Q8", "MAT3458-2025-P2-Q9", "MAT3458-2025-P2-Q11", "MAT3458-2025-P2-Q12"]}]}, "extras": [{"label": "Bloco · Produto interno, ortogonalidade e projeção · prova", "href": "pdf/MAT3458-bloco-produto-interno_enunciado.pdf"}, {"label": "Bloco · Produto interno, ortogonalidade e projeção · resolução", "href": "pdf/MAT3458-bloco-produto-interno_resolucao.pdf"}, {"label": "Bloco · Transformações lineares · prova", "href": "pdf/MAT3458-bloco-transformacoes-lineares_enunciado.pdf"}, {"label": "Bloco · Transformações lineares · resolução", "href": "pdf/MAT3458-bloco-transformacoes-lineares_resolucao.pdf"}]}</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('dados').textContent);
+const T = D.taxonomia, PROVAS = D.provas;
+const top = Object.fromEntries(T.topicos.map(t=>[t.slug,t]));
+const pad = Object.fromEntries(T.padroes.map(p=>[p.id,p]));
+const Q = [];
+PROVAS.forEach(p=>p.questoes.forEach(q=>Q.push(Object.assign({prova:p.prova, ano:p.ano, pid:p.id, status:p.status}, q))));
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num = (x,d=1) => x.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pdf = (q,v) => `pdf/${q.pid}_${v}.pdf#page=${v==='enunciado'?q.pagina_enunciado:q.pagina_resolucao}`;
+const tipos = ['P1','P2','P3','PSub'];
+const porTipo = t => PROVAS.filter(p=>p.prova===t);
+const anos = PROVAS.map(p=>p.ano).sort();
+
+// topo
+const n = PROVAS.length;
+document.getElementById('titulo').textContent = T.materia;
+document.title = 'Raio-X ' + T.materia;
+document.getElementById('sub').innerHTML = `<b>${esc(T.codigo)}</b> · baseado em <b>${n} provas</b> (P2 de ${anos.join(', ')}) · atualizado em ${esc(D.atualizado)}`;
+document.getElementById('docs').innerHTML = PROVAS.slice().sort((a,b)=>a.ano-b.ano).map(p=>
+  `<a href="pdf/${p.id}_enunciado.pdf" target="_blank" rel="noopener">${p.prova} ${p.ano} · prova</a><a href="pdf/${p.id}_resolucao.pdf" target="_blank" rel="noopener">${p.prova} ${p.ano} · resolução</a>`).join('') + (D.extras||[]).map(x=>`<a href="${esc(x.href)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join('');
+const av = [];
+if (T.nota_organizacao) av.push(`<b>Organizado por conteúdo.</b> ${esc(T.nota_organizacao)}`);
+if (PROVAS.some(p=>p.status!=='revisada')) av.push('<b>Achou um erro?</b> Avise em @prisma.poli.');
+if (n < 4) av.push(`<b>Poucas provas, tendência fraca.</b> São só ${n} P2 analisadas; os números abaixo mostram o que já caiu, não o que vai cair.`);
+else av.push(`<b>Lembre:</b> os números abaixo mostram o que caiu nas ${n} P2 analisadas, não o que vai cair.`);
+if (T.status && T.status.startsWith('proposta')) av.push('<b>Taxonomia em proposta.</b> A lista de tópicos e padrões ainda aguarda o OK do coordenador da matéria.');
+document.getElementById('avisos').innerHTML = av.map(a=>`<div class="aviso">${a}</div>`).join('');
+
+// mapa de calor: colunas = tipos de prova que têm dados + uma coluna por prova
+const tiposComDados = tipos.filter(t=>porTipo(t).length);
+const colunas = [];
+tiposComDados.forEach(t=>{ colunas.push({k:t, label: T.organizacao==='conteudo' ? 'Total' : `${t} · total`, provas:porTipo(t)}); porTipo(t).sort((a,b)=>a.ano-b.ano).forEach(p=>colunas.push({k:p.id,label:`${p.prova} ${p.ano}`,provas:[p]})); });
+let html = '<thead><tr><th>Tópico</th>' + colunas.map(c=>`<th class="col">${esc(c.label)}</th>`).join('') + '</tr></thead><tbody>';
+const grupos = [...new Set(T.topicos.map(t=>t.grupo))];
+const contagem = slug => colunas.map(c=>{ const qs=Q.filter(q=>c.provas.some(p=>p.id===q.pid) && q.topicos.includes(slug)); const np=new Set(qs.map(q=>q.pid)).size; return {np, tot:c.provas.length, qs}; });
+const ordem = T.topicos.slice().sort((a,b)=> grupos.indexOf(a.grupo)-grupos.indexOf(b.grupo));
+ordem.forEach(t=>{
+  const cs = contagem(t.slug);
+  html += `<tr><td class="t">${esc(t.nome)}<small>${esc(t.grupo)}</small></td>` + cs.map((c,i)=>{
+    const fr = c.np/c.tot; const lvl = c.np===0?0: (fr<=0.34?1: fr<=0.67?2:3);
+    const txt = colunas[i].provas.length>1 ? `${c.np} de ${c.tot}` : (c.np? '✓' : '–');
+    const aria = `${t.nome}, ${colunas[i].label}: ${c.np} de ${c.tot} provas`;
+    return `<td class="c"><button class="cell" type="button" data-n="${lvl}" data-t="${t.slug}" data-c="${i}" aria-label="${esc(aria)}" ${c.np?'':'tabindex="-1"'}>${txt}</button></td>`; }).join('') + '</tr>';
+});
+html += '</tbody>';
+document.getElementById('heat').innerHTML = html;
+document.getElementById('legend').innerHTML = '<span><i style="background:var(--h0)"></i>não apareceu</span><span><i style="background:var(--h1)"></i>em poucas</span><span><i style="background:var(--h2)"></i>em cerca de metade</span><span><i style="background:var(--h3)"></i>em quase todas</span>' + (T.organizacao!=='conteudo' && tipos.filter(t=>!porTipo(t).length).length?`<span>· ainda sem ${tipos.filter(t=>!porTipo(t).length).join(', ')} no acervo</span>`:'');
+document.getElementById('heat').addEventListener('click', e=>{
+  const b = e.target.closest('.cell'); if(!b || b.dataset.n==='0') return;
+  document.querySelectorAll('.cell.sel').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+  const t = top[b.dataset.t], c = colunas[+b.dataset.c], cs = contagem(t.slug)[+b.dataset.c];
+  document.getElementById('heatdetail').innerHTML = `<b>${esc(t.nome)}</b> · ${esc(c.label)}: apareceu em ${cs.np} de ${cs.tot} ${cs.tot>1?'provas analisadas':'prova'}.<ul>` +
+    cs.qs.map(q=>`<li><a class="qlink" href="${pdf(q,'enunciado')}" target="_blank" rel="noopener">${q.id}</a> ${esc(q.resumo)}</li>`).join('') + '</ul>';
+});
+
+// quanto vale
+const vale = T.topicos.map(t=>{ const tot = PROVAS.reduce((s,p)=>s+p.questoes.filter(q=>q.topicos.includes(t.slug)).reduce((a,q)=>a+q.pontos,0),0); return {t, v: tot/PROVAS.length}; }).sort((a,b)=>b.v-a.v);
+document.getElementById('bars').innerHTML = vale.map(x=>`<div class="bar"><span>${esc(x.t.nome)}</span><div class="track"><div class="fill" style="width:${x.v*10}%"></div></div><span class="v">${num(x.v)}</span></div>`).join('');
+
+// padrões
+const qsDoPadrao = id => Q.filter(q=>q.padrao===id || (q.padroes_secundarios||[]).includes(id));
+document.getElementById('pad').innerHTML = '<thead><tr><th>Padrão</th><th>Como reconhecer</th><th>Como atacar</th><th>Onde caiu</th></tr></thead><tbody>' +
+  T.padroes.map(p=>`<tr><td><b>${esc(p.nome)}</b><span class="pid">${p.id}</span></td><td>${esc(p.reconhecer)}</td><td>${esc(p.metodo)}</td><td>${qsDoPadrao(p.id).map(q=>`<a class="qlink" href="${pdf(q,'resolucao')}" target="_blank" rel="noopener">${q.ano} Q${q.n}</a>`).join('')||'<span class="empty">–</span>'}</td></tr>`).join('') + '</tbody>';
+
+// armadilhas por tópico
+const porTop = {};
+Q.forEach(q=>(q.armadilhas_tag||[]).forEach((slug,i)=>{ (porTop[slug] ||= []).push({txt:q.armadilhas[i], q}); }));
+document.getElementById('traps').innerHTML = Object.entries(porTop).sort((a,b)=>b[1].length-a[1].length).map(([slug,arr])=>
+  `<div class="trap"><h3>${esc(top[slug].nome)} <span class="meta">· ${arr.length}</span></h3><ul>${arr.map(a=>`<li>${esc(a.txt)} <span>${a.q.ano} Q${a.q.n}</span></li>`).join('')}</ul></div>`).join('');
+
+// banco
+const opt = (sel, arr, all) => { sel.innerHTML = `<option value="">${all}</option>` + arr.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join(''); };
+const fTop=document.getElementById('fTop'), fPad=document.getElementById('fPad'), fProva=document.getElementById('fProva'), fAno=document.getElementById('fAno'), fDif=document.getElementById('fDif');
+opt(fTop, T.topicos.map(t=>[t.slug,t.nome]), 'Todos');
+opt(fPad, T.padroes.map(p=>[p.id,p.nome]), 'Todos');
+opt(fProva, [...new Set(PROVAS.map(p=>p.prova))].map(x=>[x,x]), 'Todas');
+opt(fAno, [...new Set(anos)].map(a=>[a,a]), 'Todos');
+opt(fDif, [[1,'1 · aplicação direta'],[2,'2 · montar a estratégia'],[3,'3 · exige uma sacada']], 'Todas');
+const dif = d => '●'.repeat(d)+'○'.repeat(3-d);
+const card = (q, opts={}) => `<article class="qcard">
+  <div class="qtop"><span class="qid">${q.id}</span><span class="meta">${T.organizacao==='conteudo'?'':num(q.pontos)+' pontos · '}<span class="dots" title="dificuldade ${q.dificuldade} de 3">${dif(q.dificuldade)}</span></span></div>
+  <div>${esc(q.resumo)}</div>
+  <div class="tags">${q.topicos.map(s=>`<span class="tag">${esc(top[s].nome)}</span>`).join('')}<span class="tag p">${q.padrao}</span></div>
+  <div class="links"><a href="${pdf(q,'enunciado')}" target="_blank" rel="noopener">Enunciado</a>${opts.semResolucao?'':`<a class="r" href="${pdf(q,'resolucao')}" target="_blank" rel="noopener">Resolução</a>`}</div>
+  ${opts.gabarito?`<div class="key"><span class="lbl">Gabarito rápido</span><ol>${q.respostas.map(r=>`<li>${esc(r)}</li>`).join('')}</ol></div>`:''}
+</article>`;
+function render(){
+  const r = Q.filter(q=>(!fTop.value||q.topicos.includes(fTop.value)) && (!fPad.value||q.padrao===fPad.value||(q.padroes_secundarios||[]).includes(fPad.value)) && (!fProva.value||q.prova===fProva.value) && (!fAno.value||String(q.ano)===fAno.value) && (!fDif.value||String(q.dificuldade)===fDif.value));
+  document.getElementById('cards').innerHTML = r.length ? r.map(q=>card(q)).join('') : '<p class="empty">Nenhuma questão com esses filtros. Tire um dos filtros para ver mais.</p>';
+}
+[fTop,fPad,fProva,fAno,fDif].forEach(s=>s.addEventListener('change',render)); render();
+
+// simulado
+let sim=[], restante=0, timer=null, rodando=false, encerrado=false;
+const clock=document.getElementById('clock'), bStart=document.getElementById('bStart'), bEnd=document.getElementById('bEnd'), dur=document.getElementById('dur');
+const fmt = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+const SIM = D.simulado || {texto:'O sorteio respeita a estrutura das P2 analisadas, uma questão por posição, cada uma de um ano. O gabarito rápido e os links das resoluções só aparecem quando você encerra.', duracao:110, slots:[1,2,3].map(n=>({ids:Q.filter(q=>q.n===n).map(q=>q.id)}))};
+document.getElementById('simlead').textContent = SIM.texto;
+if (SIM.titulo) document.querySelector('#simulado h2').textContent = SIM.titulo;
+dur.value = String(SIM.duracao||110);
+if (SIM.blocos){
+  const bx=document.createElement('div'); bx.className='blocos'; bx.innerHTML = '<span class="lbl">Blocos que caem na sua prova</span>' + SIM.blocos.map((b,i)=>`<label class="chk" for="blk${i}"><input type="checkbox" id="blk${i}" data-i="${i}" checked> ${esc(b.nome)} <span class="meta">(${b.ids.length} questões)</span></label>`).join('');
+  document.querySelector('.sim').insertBefore(bx, document.querySelector('.simbar'));
+  bx.addEventListener('change', ()=>sortear());
+}
+function sortear(){
+  if (SIM.blocos){
+    const sel=[...document.querySelectorAll('.blocos input:checked')].map(i=>SIM.blocos[+i.dataset.i]);
+    const pool=sel.flatMap(b=>b.ids.map(id=>Q.find(q=>q.id===id)));
+    const k=Math.min(SIM.n||10,pool.length); const pick=pool.slice().sort(()=>Math.random()-0.5).slice(0,k);
+    sim=pick.sort((a,b)=>pool.indexOf(a)-pool.indexOf(b));
+    encerrado=false; parar(); restante=+dur.value*60; clock.textContent=fmt(restante); bStart.textContent='Começar'; bStart.disabled=!sim.length; desenhaSim(); return;
+  }
+  const slots=SIM.slots.map(s=>Q.filter(q=>s.ids.includes(q.id)));
+  for(let tent=0;tent<200;tent++){
+    const pick=slots.map(s=>s[Math.floor(Math.random()*s.length)]);
+    if(new Set(pick.map(q=>q.pid)).size===pick.length){ sim=pick; break; }
+  }
+  encerrado=false; parar(); restante=+dur.value*60; clock.textContent=fmt(restante); bStart.textContent='Começar'; bStart.disabled=false; desenhaSim();
+}
+function desenhaSim(){
+  document.getElementById('simqs').innerHTML = `<p class="empty" style="margin:0">${sim.length} questões${SIM.blocos?'':' · '+num(sim.reduce((a,q)=>a+q.pontos,0))+' pontos'}</p>` + sim.map((q,i)=>`<div class="simq"><div class="num">${i+1}</div>${card(q,{semResolucao:!encerrado, gabarito:encerrado})}</div>`).join('');
+}
+function parar(){ clearInterval(timer); timer=null; rodando=false; }
+bStart.addEventListener('click',()=>{
+  if(encerrado) return;
+  if(rodando){ parar(); bStart.textContent='Continuar'; return; }
+  rodando=true; bStart.textContent='Pausar';
+  timer=setInterval(()=>{ restante=Math.max(0,restante-1); clock.textContent=fmt(restante); if(!restante){ encerrar(); } },1000);
+});
+function encerrar(){ parar(); encerrado=true; bStart.disabled=true; bStart.textContent='Encerrado'; desenhaSim(); }
+bEnd.addEventListener('click',encerrar);
+document.getElementById('bNew').addEventListener('click',sortear);
+dur.addEventListener('change',()=>{ if(!rodando && !encerrado){ restante=+dur.value*60; clock.textContent=fmt(restante);} });
+sortear();
+
+// estude aqui
+const mats = {}; T.topicos.forEach(t=>{ (mats[t.grupo] ||= []).push(t); });
+const comMat = T.topicos.filter(t=>t.material||t.ref);
+document.getElementById('studylead').textContent = comMat.length ? 'Materiais da disciplina que cobrem cada tópico. Os links diretos entram quando o guia de teoria da Prisma estiver no ar.' : 'Ainda não há material de teoria vinculado a esta matéria. Enquanto isso, cada tópico abaixo leva às questões em que ele caiu.';
+document.getElementById('study').innerHTML = T.topicos.map(t=>{
+  const qs = Q.filter(q=>q.topicos.includes(t.slug));
+  const extra = (t.material||t.ref) ? `<p>${esc(t.material||'')}</p>` : `<p>${qs.map(q=>`<a class="qlink" href="${pdf(q,'resolucao')}" target="_blank" rel="noopener">${q.ano} Q${q.n}</a>`).join('')||'Ainda não caiu nas provas analisadas.'}</p>`;
+  return `<div><b>${esc(t.nome)}</b>${t.ref?` · <a href="${esc(t.ref)}" target="_blank" rel="noopener">abrir</a>`:''}${extra}</div>`; }).join('');
+
+document.getElementById('rodape').innerHTML = `<b>Fuja das P2</b> · uma iniciativa da chapa <b>Prisma</b> · Grêmio Politécnico · @prisma.poli<br>Transcrição e resolução: ${esc([...new Set(PROVAS.flatMap(p=>p.transcricao.concat(p.resolucao)))].join(', '))}. Revisão: ${PROVAS.some(p=>p.revisao.length)?esc([...new Set(PROVAS.flatMap(p=>p.revisao))].join(', ')):'pendente'}.`;
+
+// abre a seção pedida no link (#cai, #banco…)
+if(location.hash){ const el=document.getElementById(location.hash.slice(1)); if(el) el.scrollIntoView(); }
+})();
+</script>
+
+</body>
+</html>
